@@ -1,0 +1,55 @@
+{
+    "name": "Development Environment",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/aws-cli:1": {
+            "version": "2.12.0" // AWS CLIのバージョンを指定
+        },
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.13.2"
+        },
+        "ghcr.io/devcontainers-extra/features/node-asdf:0": {
+            "version": "23.10.0" // 最新のNode.jsバージョン
+        },
+        "ghcr.io/devcontainers-extra/features/terraform-asdf:2": {
+            "version": "1.12.1"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // Docker
+                "ms-azuretools.vscode-docker",  // docker拡張
+
+                // React/Next.js関連
+                "dsznajder.es7-react-js-snippets", // React/Redux/GraphQLスニペット
+                "formulahendry.auto-close-tag", // 自動タグ閉じ
+                "formulahendry.auto-rename-tag", // タグの自動リネーム
+                "xabikos.javascriptsnippets", // JavaScriptスニペット
+                "styled-components.vscode-styled-components", // Styled Componentsサポート
+
+                // Terraform関連
+                "hashicorp.terraform", // Terraformサポート
+                "mauve.terraform", // Terraformの補完とフォーマット
+                "redhat.vscode-yaml", // YAMLサポート（Terraformの設定ファイル用）
+
+                // Python関連
+                "ms-python.python", // Pythonサポート
+                "ms-python.vscode-pylance", // Pylance - 高速な型チェックと補完
+                "ms-toolsai.jupyter", // Jupyterノートブックサポート
+                "njpwerner.autodocstring", // Docstring自動生成
+                "kevinrose.vsc-python-indent", // Pythonのインデント補助
+
+                // GitHub Copilot
+                "GitHub.copilot" // GitHub Copilot拡張
+            ]
+        }
+    },
+    // "postCreateCommand": "npm install", // コンテナ作成後に必要な依存関係をインストール
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",  // gitの設定を継承
+    "forwardPorts": [3000], // Next.jsがデフォルトで使うポートをフォワード
+    "remoteUser": "root" // Node.js環境用ユーザーを設定
+
+}

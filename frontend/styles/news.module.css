@@ -1,0 +1,35 @@
+.newsSection {
+  margin-top: 40px;
+}
+
+.newsContainer {
+  padding: 16px;
+  background-color: #f9f9f9;
+}
+
+.newsItem {
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.newsDate {
+  font-size: 14px;
+  color: #888;
+}
+
+.newsContent {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.newsDetails {
+  font-size: 14px;
+  margin-top: 8px;
+  color: #555;
+}

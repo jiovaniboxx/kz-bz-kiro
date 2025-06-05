@@ -1,0 +1,62 @@
+:root {
+  --skin-color: #f5d6c6; /* 肌色の変数を追加 */
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--light-blue);
+  padding: 8px 16px;
+  transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+  background-color: var(--light-blue);
+  border-radius: 4px;
+}
+
+@font-face {
+  font-family: 'FuwaMoko';
+  src: url('/fonts/fuwamocofont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fuwamoko {
+  font-family: 'FuwaMoko', sans-serif;
+  font-size: 2rem; /* フォントサイズを大きく設定 */
+  color: orange; /* 直接オレンジ色を指定 */
+}
+
+.fuwamoko2 {
+  font-family: 'FuwaMoko', sans-serif;
+  font-size: 2rem; /* フォントサイズを大きく設定 */
+  color: rgb(235, 79, 7); /* 直接オレンジ色を指定 */
+}
+
+.black-font {
+  color: black;
+}
+
+.small-font {
+  font-size: 0.5em; /* フォントサイズを小さく設定 */
+}
+
+body {
+  background-image: url('/images/white_room.png'); /* 星空の背景画像を設定 */
+  background-size: cover; /* 背景画像をカバーする */
+  background-position: center; /* 背景画像を中央に配置 */
+  background-repeat: no-repeat; /* 背景画像を繰り返さない */
+  color: white; /* テキストカラーを白に設定 */
+}

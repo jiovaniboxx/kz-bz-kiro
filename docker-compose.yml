@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./frontend:/app
+      # - /app/node_modules
+    # environment:
+      # NEXT_PUBLIC_API_URL: "http://localhost:8080"
+    env_file:
+      - .env
+    command: /bin/sh -c "npm run dev"
+    depends_on:
+      - localstack
+      - backend
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    environment:
+      TEST: development
+      PYTHONPATH: /app:/app/backend  # backendディレクトリを追加
+      AWS_DEFAULT_REGION: ap-northeast-1  # リージョンを指定
+      DYNAMO_ENDPOINT: http://localstack:4566
+      AWS_REGION: ap-northeast-1
+      AWS_ACCESS_KEY_ID: localstack
+      AWS_SECRET_ACCESS_KEY: localstack
+    env_file:
+      - .env
+    depends_on:
+      - localstack
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEBUG=${DEBUG:-0}
+      - PERSISTENCE=1
+      - AWS_DEFAULT_REGION=ap-northeast-1
+      - AWS_ACCESS_KEY_ID=localstack
+      - AWS_SECRET_ACCESS_KEY=localstack
+      - SERVICES=s3,sqs,sts,iam,dynamodb,cloudwatch,apigateway
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+    env_file:
+      - .env
+
+  dynamodb_admin:
+    image: aaronshaf/dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://localstack:4566
+      - AWS_REGION=ap-northeast-1
+      - AWS_ACCESS_KEY_ID=localstack
+      - AWS_SECRET_ACCESS_KEY=localstack
+    env_file:
+      - .env
+    depends_on:
+      - localstack

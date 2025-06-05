@@ -1,0 +1,37 @@
+.corporateLogo {
+  font-family: 'CorporateLogoRounded', sans-serif;
+}
+
+.menuItem {
+  font-family: 'GeistSans', sans-serif;
+  font-weight: 500;
+  color: #333333;
+  text-transform: none;
+  transition: color 0.3s ease;
+}
+
+.menuItem:hover {
+  color: #f8f8f8;
+}
+
+.navbar {
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-family: 'GeistSans', sans-serif;
+  font-weight: 700;
+  color: #333333;
+}
+
+.menuItems {
+  display: flex;
+  gap: 16px;
+}

@@ -1,0 +1,85 @@
+.imageGallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 1列に4つの画像を表示 */
+  gap: 16px;
+}
+
+.slideshow {
+  width: 100%;
+  overflow: hidden;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 アスペクト比 */
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.imageContainer img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  width: 100%;
+  height: 100%; /* 高さを100%に設定 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  white-space: pre-wrap; /* 改行をサポート */
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  color: white; /* テキストの色を白に設定 */
+}
+
+.imageContainer:hover .overlay {
+  opacity: 1;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.text {
+  font-size: 1rem;
+}
+
+.newsSection {
+  margin-top: 40px;
+}
+
+.newsItem {
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

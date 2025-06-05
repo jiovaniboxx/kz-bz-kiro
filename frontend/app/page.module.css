@@ -1,0 +1,18 @@
+.pageContainer {
+  padding: 0;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.slideshowContainer {
+  width: 100%; /* コンテナの幅を100%に設定 */
+  height: 60vh; /* コンテナの高さを60%のビューポート高さに設定 */
+  margin-bottom: 40px;
+}
+
+.homeContainer {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

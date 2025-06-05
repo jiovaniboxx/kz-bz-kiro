@@ -1,0 +1,18 @@
+.header {
+  background-color: #ffffff !important; /* 背景色を白に設定 */
+}
+
+.header .toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .title {
+  font-family: 'FuwaMoko', sans-serif;
+  color: black;
+}
+
+.header .menu-bar {
+  font-family: 'CorporateLogoRounded', sans-serif;
+}

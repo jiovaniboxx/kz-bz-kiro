@@ -1,0 +1,53 @@
+.pricing-container {
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.5rem;
+  }
+  
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .pricing-cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  
+  .card {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+  }
+  
+  .card h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .card p {
+    color: #4a5568;
+    margin-bottom: 1rem;
+  }
+  
+  .card ul {
+    color: #718096;
+    margin-bottom: 1rem;
+  }
+  
+  .card button {
+    background-color: #4299e1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+  }
+  
+  .card button:hover {
+    background-color: #3182ce;
+  }
