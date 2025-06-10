@@ -1,6 +1,6 @@
-from app.domain.contact import ContactModel
-from app.domain.contact import send_email
-from app.infrastructure.t_contact_repository import t_contact_repository_save
+from contact.domain.contact import ContactModel
+from contact.domain.contact import send_email
+from contact.infrastructure.t_contact_repository import t_contact_repository_save
 
 class ContactUseCase:
     def __init__(self, contact: ContactModel):

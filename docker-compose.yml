@@ -22,14 +22,14 @@ services:
   backend:
     build:
       context: backend
-      dockerfile: Dockerfile
+      dockerfile: app/Dockerfile
     ports:
       - "8080:8080"
     volumes:
-      - ./backend:/app
+      - ./backend:/backend
     environment:
       TEST: development
-      PYTHONPATH: /app:/app/backend  # backendディレクトリを追加
+      PYTHONPATH: /backend/app  # backendディレクトリを追加
       AWS_DEFAULT_REGION: ap-northeast-1  # リージョンを指定
       DYNAMO_ENDPOINT: http://localstack:4566
       AWS_REGION: ap-northeast-1

@@ -22,3 +22,27 @@ else
     --endpoint-url http://localhost:4566 \
     --region ap-northeast-1
 fi
+
+
+T_SUBMIT_APPLICATION='t_submit_application'
+aws dynamodb list-tables \
+--endpoint-url http://localhost:4566 \
+--region ap-northeast-1 \
+| grep $T_SUBMIT_APPLICATION
+
+if [ $? -eq 0 ]; then
+    aws dynamodb put-item \
+    --table-name $T_SUBMIT_APPLICATION \
+    --item '{ "name": { "S": "サンプル jiro" }, "email": { "S": "sample2@sample.com" }, "message": { "S": "sample2 message." }, "created_at": { "S": "2025-04-05T12:12:12Z" } }' \
+    --endpoint-url http://localhost:4566 \
+    --region ap-northeast-1
+    echo "Table $T_SUBMIT_APPLICATION already exists."
+else
+    aws dynamodb create-table \
+    --table-name $T_SUBMIT_APPLICATION \
+    --attribute-definitions '[{"AttributeName":"created_at","AttributeType": "S"}]' \
+    --key-schema '[{"AttributeName":"created_at","KeyType": "HASH"}]' \
+    --provisioned-throughput '{"ReadCapacityUnits": 5,"WriteCapacityUnits": 5}' \
+    --endpoint-url http://localhost:4566 \
+    --region ap-northeast-1
+fi
