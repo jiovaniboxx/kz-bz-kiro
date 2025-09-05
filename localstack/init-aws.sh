@@ -1,21 +1,21 @@
 #!/bin/bash
-T_CONTACT='t_contact'
+table='t_contact'
 
 aws dynamodb list-tables \
 --endpoint-url http://localhost:4566 \
 --region ap-northeast-1 \
-| grep $T_CONTACT
+| grep $table
 
 if [ $? -eq 0 ]; then
     aws dynamodb put-item \
-    --table-name $T_CONTACT \
+    --table-name $table \
     --item '{ "name": { "S": "サンプル 太郎" }, "email": { "S": "sample@sample.com" }, "message": { "S": "sample message." }, "created_at": { "S": "2025-04-05T12:12:12Z" } }' \
     --endpoint-url http://localhost:4566 \
     --region ap-northeast-1
-    echo "Table $T_CONTACT already exists."
+    echo "Table $table already exists."
 else
     aws dynamodb create-table \
-    --table-name $T_CONTACT \
+    --table-name $table \
     --attribute-definitions '[{"AttributeName":"created_at","AttributeType": "S"}]' \
     --key-schema '[{"AttributeName":"created_at","KeyType": "HASH"}]' \
     --provisioned-throughput '{"ReadCapacityUnits": 5,"WriteCapacityUnits": 5}' \
@@ -24,22 +24,68 @@ else
 fi
 
 
-T_SUBMIT_APPLICATION='t_submit_application'
+table='t_submit_application'
 aws dynamodb list-tables \
 --endpoint-url http://localhost:4566 \
 --region ap-northeast-1 \
-| grep $T_SUBMIT_APPLICATION
+| grep $table
 
 if [ $? -eq 0 ]; then
     aws dynamodb put-item \
-    --table-name $T_SUBMIT_APPLICATION \
+    --table-name $table \
     --item '{ "name": { "S": "サンプル jiro" }, "email": { "S": "sample2@sample.com" }, "message": { "S": "sample2 message." }, "created_at": { "S": "2025-04-05T12:12:12Z" } }' \
     --endpoint-url http://localhost:4566 \
     --region ap-northeast-1
-    echo "Table $T_SUBMIT_APPLICATION already exists."
+    echo "Table $table already exists."
 else
     aws dynamodb create-table \
-    --table-name $T_SUBMIT_APPLICATION \
+    --table-name $table \
+    --attribute-definitions '[{"AttributeName":"created_at","AttributeType": "S"}]' \
+    --key-schema '[{"AttributeName":"created_at","KeyType": "HASH"}]' \
+    --provisioned-throughput '{"ReadCapacityUnits": 5,"WriteCapacityUnits": 5}' \
+    --endpoint-url http://localhost:4566 \
+    --region ap-northeast-1
+fi
+
+table='t_user_information'
+aws dynamodb list-tables \
+--endpoint-url http://localhost:4566 \
+--region ap-northeast-1 \
+| grep $table
+
+if [ $? -eq 0 ]; then
+    aws dynamodb put-item \
+    --table-name $table \
+    --item '{ "name": { "S": "サンプル jiro" }, "email": { "S": "sample2@sample.com" }, "message": { "S": "sample2 message." }, "created_at": { "S": "2025-04-05T12:12:12Z" } }' \
+    --endpoint-url http://localhost:4566 \
+    --region ap-northeast-1
+    echo "Table $table already exists."
+else
+    aws dynamodb create-table \
+    --table-name $table \
+    --attribute-definitions '[{"AttributeName":"created_at","AttributeType": "S"}]' \
+    --key-schema '[{"AttributeName":"created_at","KeyType": "HASH"}]' \
+    --provisioned-throughput '{"ReadCapacityUnits": 5,"WriteCapacityUnits": 5}' \
+    --endpoint-url http://localhost:4566 \
+    --region ap-northeast-1
+fi
+
+table='t_user_sginin_history'
+aws dynamodb list-tables \
+--endpoint-url http://localhost:4566 \
+--region ap-northeast-1 \
+| grep $table
+
+if [ $? -eq 0 ]; then
+    aws dynamodb put-item \
+    --table-name $table \
+    --item '{ "name": { "S": "サンプル jiro" }, "email": { "S": "sample2@sample.com" }, "message": { "S": "sample2 message." }, "created_at": { "S": "2025-04-05T12:12:12Z" } }' \
+    --endpoint-url http://localhost:4566 \
+    --region ap-northeast-1
+    echo "Table $table already exists."
+else
+    aws dynamodb create-table \
+    --table-name $table \
     --attribute-definitions '[{"AttributeName":"created_at","AttributeType": "S"}]' \
     --key-schema '[{"AttributeName":"created_at","KeyType": "HASH"}]' \
     --provisioned-throughput '{"ReadCapacityUnits": 5,"WriteCapacityUnits": 5}' \
