@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  name    = "my-vpc"
+  name    = "vpc"
   cidr    = "10.0.0.0/16"
 
   azs             = ["ap-northeast-1a", "ap-northeast-1c"]
@@ -17,11 +17,11 @@ module "vpc" {
 
 module "ecs_cluster" {
   source  = "terraform-aws-modules/ecs/aws"
-  name    = "my-cluster"
+  name    = "cluster"
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                   = "my-app"
+  family                   = "app"
   requires_compatibilities = ["FARGATE"]
   network_mode            = "awsvpc"
   cpu                     = "256"
@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "my-app-service"
+  name            = "app-service"
   cluster         = module.ecs_cluster.id
   task_definition = aws_ecs_task_definition.app.arn
   launch_type     = "FARGATE"
