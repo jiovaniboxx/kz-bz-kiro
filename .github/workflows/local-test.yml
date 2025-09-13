@@ -28,13 +28,13 @@ jobs:
       uses: astral-sh/setup-uv@v2
 
     - name: Cache frontend dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: frontend/node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
 
     - name: Cache backend dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: backend/.venv
         key: ${{ runner.os }}-python-${{ hashFiles('backend/uv.lock') }}
