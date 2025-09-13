@@ -1,0 +1,84 @@
+name: Local Testing
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/*, bugfix/*]
+
+jobs:
+  # ローカルテスト用の軽量ジョブ
+  quick-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v2
+
+    - name: Cache frontend dependencies
+      uses: actions/cache@v3
+      with:
+        path: frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+
+    - name: Cache backend dependencies
+      uses: actions/cache@v3
+      with:
+        path: backend/.venv
+        key: ${{ runner.os }}-python-${{ hashFiles('backend/uv.lock') }}
+
+    - name: Install frontend dependencies
+      run: cd frontend && npm ci
+
+    - name: Install backend dependencies
+      run: cd backend && uv sync --group dev
+
+    - name: Quick lint check
+      run: |
+        cd frontend && npm run lint --max-warnings=0
+        cd ../backend && uv run ruff check .
+
+    - name: Quick format check
+      run: |
+        cd frontend && npm run format:check
+        cd ../backend && uv run ruff format --check .
+
+    - name: Quick unit tests
+      run: |
+        cd frontend && npm run test -- --passWithNoTests --watchAll=false
+        cd ../backend && uv run pytest tests/ -x --tb=short
+
+  # YAML validation
+  yaml-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Validate YAML files
+      uses: ibiqlik/action-yamllint@v3
+      with:
+        file_or_dir: .github/workflows/
+        config_file: .yamllint.yml
+
+    - name: Check workflow syntax
+      run: |
+        for file in .github/workflows/*.yml; do
+          echo "Checking $file"
+          # GitHub Actions syntax validation would go here
+          # For now, just check if it's valid YAML
+          python -c "import yaml; yaml.safe_load(open('$file'))"
+        done
