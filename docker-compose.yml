@@ -3,73 +3,45 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: frontend
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3030:3030"
+      - "3000:3000"
     volumes:
       - ./frontend:/app
-      # - /app/node_modules
-    # environment:
-      # NEXT_PUBLIC_API_URL: "http://localhost:8080"
-    env_file:
-      - .env
-    command: /bin/sh -c "npm run dev"
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
     depends_on:
-      - localstack
       - backend
 
   backend:
     build:
-      context: backend
-      dockerfile: app/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
-      - ./backend:/backend
+      - ./backend:/app
     environment:
-      TEST: development
-      PYTHONPATH: /backend/app  # backendディレクトリを追加
-      AWS_DEFAULT_REGION: ap-northeast-1  # リージョンを指定
-      DYNAMO_ENDPOINT: http://localstack:4566
-      AWS_REGION: ap-northeast-1
-      AWS_ACCESS_KEY_ID: localstack
-      AWS_SECRET_ACCESS_KEY: localstack
-    env_file:
-      - .env
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/english_cafe_db
+      - ENVIRONMENT=development
+      - CORS_ORIGINS=http://localhost:3000
     depends_on:
-      - localstack
+      - postgres
 
-  localstack:
-    image: localstack/localstack
+  postgres:
+    image: postgres:15-alpine
     ports:
-      - "4566:4566"
-      - "4510-4559:4510-4559"
+      - "5432:5432"
     environment:
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - DEBUG=${DEBUG:-0}
-      - PERSISTENCE=1
-      - AWS_DEFAULT_REGION=ap-northeast-1
-      - AWS_ACCESS_KEY_ID=localstack
-      - AWS_SECRET_ACCESS_KEY=localstack
-      - SERVICES=s3,sqs,sts,iam,dynamodb,cloudwatch,apigateway
+      - POSTGRES_DB=english_cafe_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - "./localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
-      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
-    env_file:
-      - .env
+      - postgres_data:/var/lib/postgresql/data
 
-  dynamodb_admin:
-    image: aaronshaf/dynamodb-admin
-    ports:
-      - "8001:8001"
-    environment:
-      - DYNAMO_ENDPOINT=http://localstack:4566
-      - AWS_REGION=ap-northeast-1
-      - AWS_ACCESS_KEY_ID=localstack
-      - AWS_SECRET_ACCESS_KEY=localstack
-    env_file:
-      - .env
-    depends_on:
-      - localstack
+volumes:
+  postgres_data:

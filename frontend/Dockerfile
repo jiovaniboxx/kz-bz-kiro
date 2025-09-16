@@ -1,35 +1,16 @@
-# Stage 1: Install dependencies and build the application
-FROM node:18-alpine AS builder
+FROM node:20-alpine
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json first to leverage Docker caching
-COPY package.json package-lock.json ./
+# パッケージファイルをコピー
+COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# 依存関係をインストール
+RUN npm install --legacy-peer-deps
 
-# Copy the rest of the application code
+# ソースコードをコピー
 COPY . .
 
-# Stage 2: Create a lightweight production image
-FROM node:18-alpine
-
-# Set the working directory
-WORKDIR /app
-
-# Copy package.json and package-lock.json first to leverage Docker caching
-COPY package.json package-lock.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
-COPY . .
-
-# Expose the application port
-EXPOSE 3030
-
-# Start the application
+# 開発サーバーを起動
+EXPOSE 3000
 CMD ["npm", "run", "dev"]
