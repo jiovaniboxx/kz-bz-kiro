@@ -99,10 +99,6 @@ class ContactService:
             else:
                 # その他のステータス更新
                 contact.update_status(status)
-                if processed_by:
-                    contact.processed_by = processed_by
-                if processing_notes:
-                    contact.processing_notes = processing_notes
             
             # 保存
             updated_contact = await self.contact_repository.save(contact)

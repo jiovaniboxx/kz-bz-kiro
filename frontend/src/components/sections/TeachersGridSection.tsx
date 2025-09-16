@@ -36,106 +36,130 @@ const allTeachers: Teacher[] = [
     name: 'Sarah Johnson',
     nameJapanese: 'サラ・ジョンソン',
     nationality: 'アメリカ',
-    photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    photo:
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     specialization: ['日常英会話', 'ビジネス英語', 'TOEIC対策'],
     experience: '8年',
-    introduction: 'こんにちは！アメリカ出身のサラです。日本に住んで5年になります。皆さんが楽しく英語を学べるよう、一人ひとりに合わせたレッスンを心がけています。',
+    introduction:
+      'こんにちは！アメリカ出身のサラです。日本に住んで5年になります。皆さんが楽しく英語を学べるよう、一人ひとりに合わせたレッスンを心がけています。',
     languages: ['英語（ネイティブ）', '日本語（上級）', 'スペイン語（中級）'],
     certifications: ['TESOL', 'TOEIC 990点'],
     hobbies: ['料理', '映画鑑賞', '旅行'],
-    teachingStyle: 'フレンドリーで楽しい雰囲気を大切にし、間違いを恐れずに話せる環境作りを心がけています。',
+    teachingStyle:
+      'フレンドリーで楽しい雰囲気を大切にし、間違いを恐れずに話せる環境作りを心がけています。',
     featured: true,
     rating: 4.9,
-    reviewCount: 127
+    reviewCount: 127,
   },
   {
     id: 'james',
     name: 'James Wilson',
     nameJapanese: 'ジェームス・ウィルソン',
     nationality: 'イギリス',
-    photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    photo:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     specialization: ['発音矯正', 'イギリス英語', 'プレゼンテーション'],
     experience: '6年',
-    introduction: 'イギリス出身のジェームスです。正しい発音と自然な表現を身につけたい方、ぜひ一緒に学びましょう！',
+    introduction:
+      'イギリス出身のジェームスです。正しい発音と自然な表現を身につけたい方、ぜひ一緒に学びましょう！',
     languages: ['英語（ネイティブ）', '日本語（中級）', 'フランス語（初級）'],
     certifications: ['CELTA', 'Cambridge English Teaching'],
     hobbies: ['音楽', 'サッカー', '読書'],
-    teachingStyle: '発音とイントネーションに重点を置き、実践的なコミュニケーション能力の向上を目指します。',
+    teachingStyle:
+      '発音とイントネーションに重点を置き、実践的なコミュニケーション能力の向上を目指します。',
     featured: false,
     rating: 4.8,
-    reviewCount: 89
+    reviewCount: 89,
   },
   {
     id: 'emma',
     name: 'Emma Thompson',
     nameJapanese: 'エマ・トンプソン',
     nationality: 'カナダ',
-    photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    photo:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     specialization: ['キッズ英語', '初心者向け', '文法基礎'],
     experience: '4年',
-    introduction: 'カナダ出身のエマです。英語が初めての方でも安心して学べるよう、基礎からしっかりサポートします。',
+    introduction:
+      'カナダ出身のエマです。英語が初めての方でも安心して学べるよう、基礎からしっかりサポートします。',
     languages: ['英語（ネイティブ）', '日本語（中級）'],
     certifications: ['TEFL', 'Child Development Certificate'],
     hobbies: ['アート', 'ヨガ', 'ガーデニング'],
-    teachingStyle: '優しく丁寧な指導で、基礎からしっかりと英語力を身につけられるようサポートします。',
+    teachingStyle:
+      '優しく丁寧な指導で、基礎からしっかりと英語力を身につけられるようサポートします。',
     featured: false,
     rating: 4.7,
-    reviewCount: 64
+    reviewCount: 64,
   },
   {
     id: 'michael',
     name: 'Michael Brown',
     nameJapanese: 'マイケル・ブラウン',
     nationality: 'オーストラリア',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    photo:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     specialization: ['ビジネス英語', 'IELTS対策', '上級者向け'],
     experience: '10年',
-    introduction: 'オーストラリア出身のマイケルです。ビジネスシーンで使える実践的な英語を一緒に学びましょう！',
+    introduction:
+      'オーストラリア出身のマイケルです。ビジネスシーンで使える実践的な英語を一緒に学びましょう！',
     languages: ['英語（ネイティブ）', '日本語（上級）', '中国語（初級）'],
     certifications: ['TESOL', 'IELTS Examiner', 'Business English Certificate'],
     hobbies: ['サーフィン', 'カメラ', 'コーヒー'],
-    teachingStyle: 'ビジネス経験を活かした実践的なレッスンで、即戦力となる英語力を身につけます。',
+    teachingStyle:
+      'ビジネス経験を活かした実践的なレッスンで、即戦力となる英語力を身につけます。',
     featured: true,
     rating: 4.9,
-    reviewCount: 156
+    reviewCount: 156,
   },
   {
     id: 'lisa',
     name: 'Lisa Davis',
     nameJapanese: 'リサ・デイビス',
     nationality: 'アメリカ',
-    photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    photo:
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     specialization: ['TOEFL対策', '留学準備', 'アカデミック英語'],
     experience: '7年',
-    introduction: 'アメリカの大学で言語学を学んだリサです。留学や進学を目指す方のサポートが得意です。',
+    introduction:
+      'アメリカの大学で言語学を学んだリサです。留学や進学を目指す方のサポートが得意です。',
     languages: ['英語（ネイティブ）', '日本語（中級）', 'ドイツ語（初級）'],
     certifications: ['TESOL', 'TOEFL iBT Instructor'],
     hobbies: ['言語学習', 'ハイキング', '写真'],
-    teachingStyle: 'アカデミックな英語力向上に重点を置き、論理的思考力も同時に育成します。',
+    teachingStyle:
+      'アカデミックな英語力向上に重点を置き、論理的思考力も同時に育成します。',
     featured: false,
     rating: 4.8,
-    reviewCount: 73
+    reviewCount: 73,
   },
   {
     id: 'david',
     name: 'David Miller',
     nameJapanese: 'デイビッド・ミラー',
     nationality: 'イギリス',
-    photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    photo:
+      'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     specialization: ['英文法', '英作文', 'Cambridge試験対策'],
     experience: '9年',
-    introduction: 'イギリス出身のデイビッドです。文法や英作文を通じて、正確で美しい英語を身につけましょう。',
+    introduction:
+      'イギリス出身のデイビッドです。文法や英作文を通じて、正確で美しい英語を身につけましょう。',
     languages: ['英語（ネイティブ）', '日本語（上級）', 'イタリア語（中級）'],
     certifications: ['CELTA', 'Cambridge ESOL Examiner'],
     hobbies: ['文学', 'クラシック音楽', 'チェス'],
-    teachingStyle: '文法の基礎を重視し、正確で洗練された英語表現力の習得を目指します。',
+    teachingStyle:
+      '文法の基礎を重視し、正確で洗練された英語表現力の習得を目指します。',
     featured: false,
     rating: 4.6,
-    reviewCount: 92
-  }
+    reviewCount: 92,
+  },
 ];
 
-const nationalities = ['全て', 'アメリカ', 'イギリス', 'カナダ', 'オーストラリア'];
+const nationalities = [
+  '全て',
+  'アメリカ',
+  'イギリス',
+  'カナダ',
+  'オーストラリア',
+];
 const specializations = [
   '全て',
   '日常英会話',
@@ -146,7 +170,7 @@ const specializations = [
   '発音矯正',
   'キッズ英語',
   '初心者向け',
-  '上級者向け'
+  '上級者向け',
 ];
 
 interface TeachersGridSectionProps {
@@ -182,13 +206,21 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
   // フィルタリングとソート
   useEffect(() => {
     let filtered = allTeachers.filter(teacher => {
-      const matchesSearch = teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           teacher.nameJapanese?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           teacher.specialization.some(spec => spec.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      const matchesNationality = selectedNationality === '全て' || teacher.nationality === selectedNationality;
-      const matchesSpecialization = selectedSpecialization === '全て' || 
-                                   teacher.specialization.includes(selectedSpecialization);
+      const matchesSearch =
+        teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.nameJapanese
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        teacher.specialization.some(spec =>
+          spec.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+      const matchesNationality =
+        selectedNationality === '全て' ||
+        teacher.nationality === selectedNationality;
+      const matchesSpecialization =
+        selectedSpecialization === '全て' ||
+        teacher.specialization.includes(selectedSpecialization);
 
       return matchesSearch && matchesNationality && matchesSpecialization;
     });
@@ -219,7 +251,7 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
       <svg
         key={i}
         className={cn(
-          'w-4 h-4',
+          'h-4 w-4',
           i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'
         )}
         fill="currentColor"
@@ -231,77 +263,76 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
   };
 
   return (
-    <section 
-      ref={sectionRef}
-      className={cn('py-20 bg-gray-50', className)}
-    >
+    <section ref={sectionRef} className={cn('bg-gray-50 py-20', className)}>
       <Container>
         {/* フィルター・検索エリア */}
-        <div className={cn(
-          'bg-white rounded-2xl p-6 shadow-sm mb-12 transform transition-all duration-1000',
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-        )}>
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div
+          className={cn(
+            'mb-12 transform rounded-2xl bg-white p-6 shadow-sm transition-all duration-1000',
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          )}
+        >
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <Input
                 placeholder="講師名や専門分野で検索..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 className="w-full"
               />
             </div>
-            
+
             <Select
               options={nationalities.map(nat => ({ value: nat, label: nat }))}
               value={selectedNationality}
-              onChange={(e) => setSelectedNationality(e.target.value)}
+              onChange={e => setSelectedNationality(e.target.value)}
               placeholder="出身国"
             />
-            
+
             <Select
-              options={specializations.map(spec => ({ value: spec, label: spec }))}
+              options={specializations.map(spec => ({
+                value: spec,
+                label: spec,
+              }))}
               value={selectedSpecialization}
-              onChange={(e) => setSelectedSpecialization(e.target.value)}
+              onChange={e => setSelectedSpecialization(e.target.value)}
               placeholder="専門分野"
             />
-            
+
             <Select
               options={[
                 { value: 'featured', label: 'おすすめ順' },
                 { value: 'rating', label: '評価順' },
                 { value: 'experience', label: '経験順' },
-                { value: 'name', label: '名前順' }
+                { value: 'name', label: '名前順' },
               ]}
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={e => setSortBy(e.target.value)}
               placeholder="並び順"
             />
           </div>
-          
+
           <div className="mt-4 text-sm text-gray-600">
             {filteredTeachers.length}名の講師が見つかりました
           </div>
         </div>
 
         {/* 講師グリッド */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {filteredTeachers.map((teacher, index) => (
             <Card
               key={teacher.id}
               className={cn(
-                'overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105',
+                'transform overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl',
                 teacher.featured && 'ring-2 ring-primary-500',
-                isVisible 
-                  ? 'translate-y-0 opacity-100' 
+                isVisible
+                  ? 'translate-y-0 opacity-100'
                   : 'translate-y-8 opacity-0'
               )}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               {teacher.featured && (
-                <Badge 
-                  variant="primary" 
-                  className="absolute top-4 left-4 z-10"
-                >
+                <Badge variant="primary" className="absolute left-4 top-4 z-10">
                   人気講師
                 </Badge>
               )}
@@ -315,13 +346,11 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
                   className="object-cover transition-transform duration-300 hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                
+
                 {/* 評価 */}
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1">
+                <div className="absolute right-4 top-4 rounded-lg bg-white/90 px-2 py-1 backdrop-blur-sm">
                   <div className="flex items-center space-x-1">
-                    <div className="flex">
-                      {renderStars(teacher.rating)}
-                    </div>
+                    <div className="flex">{renderStars(teacher.rating)}</div>
                     <span className="text-xs font-medium text-gray-900">
                       {teacher.rating}
                     </span>
@@ -329,7 +358,7 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
                 </div>
 
                 {/* 国籍 */}
-                <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium">
+                <div className="absolute bottom-4 right-4 rounded-full bg-white/90 px-3 py-1 text-xs font-medium backdrop-blur-sm">
                   {teacher.nationality}
                 </div>
               </div>
@@ -337,19 +366,19 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
               {/* 講師情報 */}
               <div className="p-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">
+                  <h3 className="mb-1 text-lg font-bold text-gray-900">
                     {teacher.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mb-2">
+                  <p className="mb-2 text-sm text-gray-500">
                     {teacher.nameJapanese}
                   </p>
-                  
-                  <div className="flex items-center justify-between text-xs text-gray-600 mb-3">
+
+                  <div className="mb-3 flex items-center justify-between text-xs text-gray-600">
                     <span>経験: {teacher.experience}</span>
                     <span>{teacher.reviewCount}件のレビュー</span>
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <div className="flex flex-wrap gap-1">
                     {teacher.specialization.slice(0, 3).map((spec, idx) => (
@@ -365,29 +394,21 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-600 line-clamp-3 mb-4">
+                <p className="mb-4 line-clamp-3 text-sm text-gray-600">
                   {teacher.introduction}
                 </p>
 
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="flex-1"
                     asChild
                   >
-                    <Link href={`/instructors/${teacher.id}`}>
-                      詳細
-                    </Link>
+                    <Link href={`/instructors/${teacher.id}`}>詳細</Link>
                   </Button>
-                  <Button 
-                    size="sm" 
-                    className="flex-1"
-                    asChild
-                  >
-                    <Link href="/contact">
-                      予約
-                    </Link>
+                  <Button size="sm" className="flex-1" asChild>
+                    <Link href="/contact">予約</Link>
                   </Button>
                 </div>
               </div>
@@ -397,15 +418,15 @@ export function TeachersGridSection({ className }: TeachersGridSectionProps) {
 
         {/* 結果が見つからない場合 */}
         {filteredTeachers.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <div className="py-12 text-center">
+            <div className="mb-4 text-6xl">🔍</div>
+            <h3 className="mb-2 text-xl font-semibold text-gray-900">
               講師が見つかりませんでした
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="mb-6 text-gray-600">
               検索条件を変更してもう一度お試しください
             </p>
-            <Button 
+            <Button
               variant="outline"
               onClick={() => {
                 setSearchQuery('');

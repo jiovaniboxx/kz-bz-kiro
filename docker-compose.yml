@@ -11,9 +11,11 @@ services:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
+    env_file:
+      - ./frontend/.env.docker
     environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
     depends_on:
       - backend
 
@@ -25,10 +27,8 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
-    environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/english_cafe_db
-      - ENVIRONMENT=development
-      - CORS_ORIGINS=http://localhost:3000
+    env_file:
+      - ./backend/.env.development
     depends_on:
       - postgres
 

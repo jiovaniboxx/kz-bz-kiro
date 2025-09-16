@@ -3,14 +3,21 @@
  * 構造化データ（JSON-LD）を埋め込むためのコンポーネント
  */
 
-import { StructuredData as StructuredDataUtil } from '@/utils/metadata';
+import { generateStructuredDataScript } from '@/utils/metadata';
 
 interface StructuredDataProps {
   data: object;
 }
 
 export function StructuredData({ data }: StructuredDataProps) {
-  return <StructuredDataUtil data={data} />;
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: generateStructuredDataScript(data),
+      }}
+    />
+  );
 }
 
 // 講師用構造化データ
@@ -23,20 +30,22 @@ export function InstructorStructuredData({ instructor }: { instructor: any }) {
     jobTitle: '英会話講師',
     worksFor: {
       '@type': 'EducationalOrganization',
-      name: '英会話カフェ'
+      name: '英会話カフェ',
     },
     nationality: instructor.nationality,
     knowsLanguage: instructor.languages,
     hasCredential: instructor.certifications,
     description: instructor.introduction,
     image: instructor.photo,
-    aggregateRating: instructor.rating ? {
-      '@type': 'AggregateRating',
-      ratingValue: instructor.rating,
-      reviewCount: instructor.reviewCount,
-      bestRating: 5,
-      worstRating: 1
-    } : undefined
+    aggregateRating: instructor.rating
+      ? {
+          '@type': 'AggregateRating',
+          ratingValue: instructor.rating,
+          reviewCount: instructor.reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        }
+      : undefined,
   };
 
   return <StructuredData data={structuredData} />;
@@ -51,7 +60,7 @@ export function LessonStructuredData({ lesson }: { lesson: any }) {
     description: lesson.description,
     provider: {
       '@type': 'EducationalOrganization',
-      name: '英会話カフェ'
+      name: '英会話カフェ',
     },
     courseMode: lesson.type === 'online' ? 'online' : 'onsite',
     educationalLevel: lesson.level.join(', '),
@@ -60,18 +69,22 @@ export function LessonStructuredData({ lesson }: { lesson: any }) {
       '@type': 'Offer',
       price: lesson.price.amount,
       priceCurrency: lesson.price.currency,
-      availability: 'https://schema.org/InStock'
+      availability: 'https://schema.org/InStock',
     },
     image: lesson.image,
     coursePrerequisites: lesson.requirements?.join(', '),
-    teaches: lesson.features?.join(', ')
+    teaches: lesson.features?.join(', '),
   };
 
   return <StructuredData data={structuredData} />;
 }
 
 // FAQ用構造化データ
-export function FAQStructuredData({ faqs }: { faqs: Array<{ question: string; answer: string }> }) {
+export function FAQStructuredData({
+  faqs,
+}: {
+  faqs: Array<{ question: string; answer: string }>;
+}) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -80,9 +93,9 @@ export function FAQStructuredData({ faqs }: { faqs: Array<{ question: string; an
       name: faq.question,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: faq.answer
-      }
-    }))
+        text: faq.answer,
+      },
+    })),
   };
 
   return <StructuredData data={structuredData} />;
@@ -95,20 +108,20 @@ export function ReviewStructuredData({ reviews }: { reviews: any[] }) {
     '@type': 'Review',
     author: {
       '@type': 'Person',
-      name: review.studentName
+      name: review.studentName,
     },
     reviewRating: {
       '@type': 'Rating',
       ratingValue: review.rating,
       bestRating: 5,
-      worstRating: 1
+      worstRating: 1,
     },
     reviewBody: review.comment,
     datePublished: review.submittedAt,
     itemReviewed: {
       '@type': 'EducationalOrganization',
-      name: '英会話カフェ'
-    }
+      name: '英会話カフェ',
+    },
   }));
 
   return (

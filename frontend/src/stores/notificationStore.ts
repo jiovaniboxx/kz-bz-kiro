@@ -17,12 +17,14 @@ export interface Notification {
 
 interface NotificationState {
   notifications: Notification[];
-  
+
   // Actions
-  addNotification: (notification: Omit<Notification, 'id' | 'createdAt'>) => string;
+  addNotification: (
+    notification: Omit<Notification, 'id' | 'createdAt'>
+  ) => string;
   removeNotification: (id: string) => void;
   clearAll: () => void;
-  
+
   // Convenience methods
   success: (message: string, title?: string, duration?: number) => string;
   error: (message: string, title?: string, duration?: number) => string;
@@ -37,21 +39,21 @@ export const useNotificationStore = create<NotificationState>()(
     (set, get) => ({
       notifications: [],
 
-      addNotification: (notification) => {
+      addNotification: notification => {
         const id = crypto.randomUUID();
         const newNotification: Notification = {
           ...notification,
           id,
           createdAt: new Date(),
-          duration: notification.duration ?? DEFAULT_DURATION
+          duration: notification.duration ?? DEFAULT_DURATION,
         };
 
-        set((state) => ({
-          notifications: [...state.notifications, newNotification]
+        set(state => ({
+          notifications: [...state.notifications, newNotification],
         }));
 
         // 自動削除（duration > 0の場合）
-        if (newNotification.duration > 0) {
+        if (newNotification.duration && newNotification.duration > 0) {
           setTimeout(() => {
             get().removeNotification(id);
           }, newNotification.duration);
@@ -60,9 +62,9 @@ export const useNotificationStore = create<NotificationState>()(
         return id;
       },
 
-      removeNotification: (id) => {
-        set((state) => ({
-          notifications: state.notifications.filter(n => n.id !== id)
+      removeNotification: id => {
+        set(state => ({
+          notifications: state.notifications.filter(n => n.id !== id),
         }));
       },
 
@@ -75,16 +77,17 @@ export const useNotificationStore = create<NotificationState>()(
           type: 'success',
           message,
           title,
-          duration
+          duration,
         });
       },
 
-      error: (message, title, duration = 0) => { // エラーは永続表示がデフォルト
+      error: (message, title, duration = 0) => {
+        // エラーは永続表示がデフォルト
         return get().addNotification({
           type: 'error',
           message,
           title,
-          duration
+          duration,
         });
       },
 
@@ -93,7 +96,7 @@ export const useNotificationStore = create<NotificationState>()(
           type: 'warning',
           message,
           title,
-          duration
+          duration,
         });
       },
 
@@ -102,15 +105,16 @@ export const useNotificationStore = create<NotificationState>()(
           type: 'info',
           message,
           title,
-          duration
+          duration,
         });
-      }
+      },
     }),
     {
-      name: 'notification-store'
+      name: 'notification-store',
     }
   )
 );
 
 // セレクター
-export const useNotifications = () => useNotificationStore((state) => state.notifications);
+export const useNotifications = () =>
+  useNotificationStore(state => state.notifications);

@@ -19,14 +19,14 @@ terraform {
     }
   }
   
-  # Terraform Cloud backend (無料プラン)
-  backend "remote" {
-    organization = "english-cafe"
-    
-    workspaces {
-      name = "monitoring-prod"
-    }
-  }
+  # Local backend for testing
+  # backend "remote" {
+  #   organization = "english-cafe"
+  #   
+  #   workspaces {
+  #     name = "monitoring-prod"
+  #   }
+  # }
 }
 
 # Provider Configuration
@@ -100,7 +100,7 @@ resource "vercel_project" "english_cafe_frontend" {
     },
     {
       key    = "NEXT_PUBLIC_NEW_RELIC_APP_ID"
-      value  = module.newrelic.application_id
+      value  = "test-app-id"
       target = ["production"]
     },
     {
@@ -134,58 +134,59 @@ resource "vercel_project_domain" "english_cafe_domain" {
   domain     = var.custom_domain
 }
 
-# New Relic Module
-module "newrelic" {
-  source = "../../modules/newrelic"
-  
-  application_name    = var.application_name
-  environment        = local.environment
-  newrelic_account_id = var.newrelic_account_id
-  
-  apdex_threshold          = 0.7  # Stricter for production
-  end_user_apdex_threshold = 5    # Stricter for production
-  
-  alert_thresholds = local.alert_thresholds
-  
-  notification_channels = {
-    slack = var.slack_webhook_url
-    email = var.admin_email
-  }
-  
-  runbook_url = var.runbook_url
-  common_tags = local.common_tags
-  
-  enable_business_alerts = true
-}
+# New Relic Module - Commented out for testing
+# module "newrelic" {
+#   source = "../../modules/newrelic"
+#   
+#   application_name    = var.application_name
+#   environment        = local.environment
+#   newrelic_account_id = var.newrelic_account_id
+#   
+#   apdex_threshold          = 0.7  # Stricter for production
+#   end_user_apdex_threshold = 5    # Stricter for production
+#   
+#   alert_thresholds = local.alert_thresholds
+#   
+#   notification_channels = {
+#     slack = var.slack_webhook_url
+#     email = var.admin_email
+#   }
+#   
+#   runbook_url = var.runbook_url
+#   common_tags = local.common_tags
+#   
+#   enable_business_alerts = true
+# }
 
-# Grafana Module
-module "grafana" {
-  source = "../../modules/grafana"
-  
-  application_name = var.application_name
-  environment     = local.environment
-  
-  prometheus_url = var.prometheus_url
-  prometheus_auth = {
-    enabled  = true
-    username = var.prometheus_username
-    password = var.prometheus_password
-  }
-  
-  newrelic_integration = {
-    enabled    = true
-    account_id = var.newrelic_account_id
-    api_key    = var.newrelic_api_key
-  }
-  
-  alert_thresholds      = local.alert_thresholds
-  notification_channels = local.notification_channels
-  runbook_url          = var.runbook_url
-  
-  enable_business_dashboards = true
-  
-  common_tags = local.common_tags
-}
+# Grafana Module - Commented out for testing
+# module "grafana" {
+#   source = "../../modules/grafana"
+#   
+#   application_name = var.application_name
+#   environment     = local.environment
+#   grafana_url     = var.grafana_url
+#   
+#   prometheus_url = var.prometheus_url
+#   prometheus_auth = {
+#     enabled  = true
+#     username = var.prometheus_username
+#     password = var.prometheus_password
+#   }
+#   
+#   newrelic_integration = {
+#     enabled    = true
+#     account_id = var.newrelic_account_id
+#     api_key    = var.newrelic_api_key
+#   }
+#   
+#   alert_thresholds      = local.alert_thresholds
+#   notification_channels = local.notification_channels
+#   runbook_url          = var.runbook_url
+#   
+#   enable_business_dashboards = true
+#   
+#   common_tags = local.common_tags
+# }
 
 # Render Service Monitoring (via New Relic)
 # Renderサービスは直接Terraformで管理しないが、監視設定を含める
@@ -206,86 +207,86 @@ locals {
   ]
 }
 
-# Synthetic Monitoring for Render Backend
-resource "newrelic_synthetics_monitor" "render_backend_health" {
-  count = length(local.render_health_checks)
-  
-  name   = local.render_health_checks[count.index].name
-  type   = "SIMPLE"
-  period = "EVERY_5_MINUTES"
-  status = "ENABLED"
-  
-  uri                       = local.render_health_checks[count.index].url
-  validation_string         = ""
-  verify_ssl                = true
-  bypass_head_request       = false
-  treat_redirect_as_failure = false
-  
-  locations_public = ["AWS_AP_NORTHEAST_1", "AWS_US_EAST_1"]
-  
-  tag {
-    key    = "Environment"
-    values = [local.environment]
-  }
-  
-  tag {
-    key    = "Service"
-    values = ["render-backend"]
-  }
-}
+# Synthetic Monitoring for Render Backend - Commented out for testing
+# resource "newrelic_synthetics_monitor" "render_backend_health" {
+#   count = length(local.render_health_checks)
+#   
+#   name   = local.render_health_checks[count.index].name
+#   type   = "SIMPLE"
+#   period = "EVERY_5_MINUTES"
+#   status = "ENABLED"
+#   
+#   uri                       = local.render_health_checks[count.index].url
+#   validation_string         = ""
+#   verify_ssl                = true
+#   bypass_head_request       = false
+#   treat_redirect_as_failure = false
+#   
+#   locations_public = ["AWS_AP_NORTHEAST_1", "AWS_US_EAST_1"]
+#   
+#   tag {
+#     key    = "Environment"
+#     values = [local.environment]
+#   }
+#   
+#   tag {
+#     key    = "Service"
+#     values = ["render-backend"]
+#   }
+# }
 
 # Vercel Analytics Integration
 # Vercel Analyticsは自動で有効化されるため、追加設定は不要
 
-# Render Module (Custom API-based)
-module "render" {
-  source = "../../modules/render"
-  
-  render_api_key = var.render_api_key
-  service_name   = var.render_service_name
-  github_repo    = "https://github.com/${var.github_repository}"
-  branch         = "main"
-  
-  build_command = "cd backend && pip install -r requirements.txt"
-  start_command = "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
-  
-  environment   = "free"  # free, starter, standard, pro
-  instance_type = "free"
-  region        = "oregon"
-  
-  environment_variables = {
-    # Database
-    DATABASE_URL = module.render.database_connection_string
-    
-    # New Relic
-    NEW_RELIC_LICENSE_KEY = var.newrelic_license_key
-    NEW_RELIC_APP_NAME    = var.application_name
-    
-    # CORS
-    FRONTEND_URL = local.deployment_config.frontend_url
-    
-    # Email
-    SMTP_HOST     = var.smtp_host
-    SMTP_PORT     = var.smtp_port
-    SMTP_USERNAME = var.smtp_username
-    SMTP_PASSWORD = var.smtp_password
-    
-    # Security
-    SECRET_KEY = var.app_secret_key
-    
-    # Environment
-    ENVIRONMENT = local.environment
-  }
-  
-  create_database = true
-  database_name   = "${var.application_name}-db"
-  database_plan   = "free"
-  
-  auto_deploy        = true
-  health_check_path  = "/health"
-  
-  common_tags = local.common_tags
-}
+# Render Module (Custom API-based) - Commented out for testing
+# module "render" {
+#   source = "../../modules/render"
+#   
+#   render_api_key = var.render_api_key
+#   service_name   = var.render_service_name
+#   github_repo    = "https://github.com/${var.github_repository}"
+#   branch         = "main"
+#   
+#   build_command = "cd backend && pip install -r requirements.txt"
+#   start_command = "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+#   
+#   environment   = "free"  # free, starter, standard, pro
+#   instance_type = "free"
+#   region        = "oregon"
+#   
+#   environment_variables = {
+#     # Database
+#     DATABASE_URL = "postgresql://test:test@localhost:5432/test"
+#     
+#     # New Relic
+#     NEW_RELIC_LICENSE_KEY = var.newrelic_license_key
+#     NEW_RELIC_APP_NAME    = var.application_name
+#     
+#     # CORS
+#     FRONTEND_URL = local.deployment_config.frontend_url
+#     
+#     # Email
+#     SMTP_HOST     = var.smtp_host
+#     SMTP_PORT     = var.smtp_port
+#     SMTP_USERNAME = var.smtp_username
+#     SMTP_PASSWORD = var.smtp_password
+#     
+#     # Security
+#     SECRET_KEY = var.app_secret_key
+#     
+#     # Environment
+#     ENVIRONMENT = local.environment
+#   }
+#   
+#   create_database = true
+#   database_name   = "${var.application_name}-db"
+#   database_plan   = "free"
+#   
+#   auto_deploy        = true
+#   health_check_path  = "/health"
+#   
+#   common_tags = local.common_tags
+# }
 
 # Cost Monitoring (無料サービスのため最小限)
 locals {

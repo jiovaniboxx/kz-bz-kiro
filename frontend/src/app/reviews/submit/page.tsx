@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ReviewForm } from '@/components/forms/ReviewForm';
 import { Container } from '@/components/ui';
 import { useNotificationStore } from '@/stores/notificationStore';
@@ -51,31 +52,32 @@ export default function SubmitReviewPage() {
   if (isSubmitted) {
     return (
       <main>
-        <section className="py-20 bg-gray-50">
+        <section className="bg-gray-50 py-20">
           <Container>
-            <div className="max-w-2xl mx-auto text-center">
-              <div className="text-6xl mb-6">✅</div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            <div className="mx-auto max-w-2xl text-center">
+              <div className="mb-6 text-6xl">✅</div>
+              <h1 className="mb-4 text-3xl font-bold text-gray-900">
                 レビューを投稿しました
               </h1>
-              <p className="text-lg text-gray-600 mb-8">
-                ご投稿いただきありがとうございます。<br />
+              <p className="mb-8 text-lg text-gray-600">
+                ご投稿いただきありがとうございます。
+                <br />
                 内容を確認後、サイトに公開させていただきます。
               </p>
               <div className="space-y-4">
                 <a
                   href="/reviews"
-                  className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
+                  className="inline-block rounded-lg bg-primary-600 px-6 py-3 text-white transition-colors hover:bg-primary-700"
                 >
                   他のレビューを見る
                 </a>
                 <br />
-                <a
+                <Link
                   href="/"
                   className="inline-block text-primary-600 hover:text-primary-700"
                 >
                   ホームに戻る
-                </a>
+                </Link>
               </div>
             </div>
           </Container>
@@ -87,13 +89,13 @@ export default function SubmitReviewPage() {
   return (
     <main>
       {/* ページヘッダー */}
-      <section className="py-16 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+      <section className="bg-gradient-to-r from-primary-600 to-primary-700 py-16 text-white">
         <Container>
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="mb-4 text-4xl font-bold md:text-5xl">
               レビューを投稿
             </h1>
-            <p className="text-xl text-primary-100 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-xl text-primary-100">
               あなたの体験を他の方と共有してください
             </p>
           </div>
@@ -101,13 +103,10 @@ export default function SubmitReviewPage() {
       </section>
 
       {/* レビューフォーム */}
-      <section className="py-20 bg-gray-50">
+      <section className="bg-gray-50 py-20">
         <Container>
-          <div className="max-w-3xl mx-auto">
-            <ReviewForm
-              onSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
-            />
+          <div className="mx-auto max-w-3xl">
+            <ReviewForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
           </div>
         </Container>
       </section>

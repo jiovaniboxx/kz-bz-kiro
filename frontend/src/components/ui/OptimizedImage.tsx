@@ -47,12 +47,12 @@ export function OptimizedImage({
       {isLoading && showPlaceholder && (
         <div
           className={cn(
-            'absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center',
+            'absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200',
             placeholderClassName
           )}
         >
           <svg
-            className="w-8 h-8 text-gray-400"
+            className="h-8 w-8 text-gray-400"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -67,10 +67,10 @@ export function OptimizedImage({
 
       {/* エラー表示 */}
       {hasError && !fallbackSrc && (
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <div className="text-center text-gray-500">
             <svg
-              className="w-12 h-12 mx-auto mb-2"
+              className="mx-auto mb-2 h-12 w-12"
               fill="currentColor"
               viewBox="0 0 20 20"
             >

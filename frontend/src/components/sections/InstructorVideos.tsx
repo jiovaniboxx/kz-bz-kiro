@@ -18,27 +18,34 @@ interface InstructorVideosProps {
   className?: string;
 }
 
-export function InstructorVideos({ teacherId, teacherName, className }: InstructorVideosProps) {
+export function InstructorVideos({
+  teacherId,
+  teacherName,
+  className,
+}: InstructorVideosProps) {
   // 講師関連動画を取得
   const instructorVideos = useMemo(() => {
-    return videoContents.filter(video => 
-      video.isActive && (
-        video.category === 'instructor-introduction' ||
-        video.tags.some(tag => 
-          tag.toLowerCase().includes(teacherId.toLowerCase()) ||
-          tag.toLowerCase().includes(teacherName.toLowerCase())
-        )
-      )
+    return videoContents.filter(
+      video =>
+        video.isActive &&
+        (video.category === 'instructor-introduction' ||
+          video.tags.some(
+            tag =>
+              tag.toLowerCase().includes(teacherId.toLowerCase()) ||
+              tag.toLowerCase().includes(teacherName.toLowerCase())
+          ))
     );
   }, [teacherId, teacherName]);
 
   // 講師の紹介動画（メイン動画）
   const mainVideo = useMemo(() => {
-    return instructorVideos.find(video => 
-      video.tags.some(tag => 
-        tag.toLowerCase().includes(teacherId.toLowerCase())
-      )
-    ) || instructorVideos[0];
+    return (
+      instructorVideos.find(video =>
+        video.tags.some(tag =>
+          tag.toLowerCase().includes(teacherId.toLowerCase())
+        )
+      ) || instructorVideos[0]
+    );
   }, [instructorVideos, teacherId]);
 
   // その他の関連動画
@@ -54,11 +61,11 @@ export function InstructorVideos({ teacherId, teacherName, className }: Instruct
     <div className={className}>
       {/* メイン講師紹介動画 */}
       {mainVideo && (
-        <Card className="p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <Card className="mb-8 p-8">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">
             講師紹介動画
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="mb-6 text-gray-600">
             {teacherName}先生からのメッセージをご覧ください
           </p>
           <VideoCard
@@ -74,10 +81,10 @@ export function InstructorVideos({ teacherId, teacherName, className }: Instruct
       {/* 関連動画 */}
       {relatedVideos.length > 0 && (
         <Card className="p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">
+          <h3 className="mb-6 text-xl font-bold text-gray-900">
             {teacherName}先生の関連動画
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid gap-6 md:grid-cols-2">
             {relatedVideos.slice(0, 4).map(video => (
               <VideoCard
                 key={video.id}
@@ -89,16 +96,26 @@ export function InstructorVideos({ teacherId, teacherName, className }: Instruct
               />
             ))}
           </div>
-          
+
           {relatedVideos.length > 4 && (
             <div className="mt-6 text-center">
               <a
                 href="/videos"
-                className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
+                className="inline-flex items-center font-medium text-blue-600 hover:text-blue-700"
               >
                 すべての動画を見る
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="ml-1 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
             </div>

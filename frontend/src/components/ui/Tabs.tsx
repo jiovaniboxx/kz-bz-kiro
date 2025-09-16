@@ -28,28 +28,29 @@ const variantClasses = {
     container: 'border-b border-gray-200',
     tab: 'px-4 py-2 font-medium text-sm border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300',
     activeTab: 'text-primary-600 border-primary-600',
-    disabledTab: 'text-gray-400 cursor-not-allowed'
+    disabledTab: 'text-gray-400 cursor-not-allowed',
   },
   pills: {
     container: 'bg-gray-100 p-1 rounded-lg',
     tab: 'px-4 py-2 font-medium text-sm rounded-md hover:bg-white hover:shadow-sm',
     activeTab: 'bg-white shadow-sm text-primary-600',
-    disabledTab: 'text-gray-400 cursor-not-allowed'
+    disabledTab: 'text-gray-400 cursor-not-allowed',
   },
   underline: {
     container: '',
     tab: 'px-4 py-2 font-medium text-sm relative hover:text-gray-700',
-    activeTab: 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary-600',
-    disabledTab: 'text-gray-400 cursor-not-allowed'
-  }
+    activeTab:
+      'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary-600',
+    disabledTab: 'text-gray-400 cursor-not-allowed',
+  },
 };
 
-export function Tabs({ 
-  items, 
-  defaultActiveTab, 
+export function Tabs({
+  items,
+  defaultActiveTab,
   onTabChange,
   variant = 'default',
-  className 
+  className,
 }: TabsProps) {
   const [activeTab, setActiveTab] = useState(
     defaultActiveTab || items[0]?.id || ''
@@ -57,7 +58,7 @@ export function Tabs({
 
   const handleTabClick = (tabId: string, disabled?: boolean) => {
     if (disabled) return;
-    
+
     setActiveTab(tabId);
     onTabChange?.(tabId);
   };
@@ -69,7 +70,7 @@ export function Tabs({
     <div className={className}>
       {/* タブヘッダー */}
       <div className={cn('flex', classes.container)}>
-        {items.map((item) => (
+        {items.map(item => (
           <button
             key={item.id}
             className={cn(
@@ -110,9 +111,5 @@ interface TabPanelProps {
 }
 
 export function TabPanel({ children, className }: TabPanelProps) {
-  return (
-    <div className={cn('py-4', className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn('py-4', className)}>{children}</div>;
 }

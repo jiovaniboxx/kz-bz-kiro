@@ -17,35 +17,44 @@ interface LessonVideosProps {
   className?: string;
 }
 
-export function LessonVideos({ lessonType, lessonTitle, className }: LessonVideosProps) {
+export function LessonVideos({
+  lessonType,
+  lessonTitle,
+  className,
+}: LessonVideosProps) {
   // レッスン関連動画を取得
   const lessonVideos = useMemo(() => {
-    return videoContents.filter(video => 
-      video.isActive && (
-        video.category === 'lesson-scene' ||
-        video.tags.some(tag => 
-          tag.toLowerCase().includes(lessonType.toLowerCase()) ||
-          tag.toLowerCase().includes(lessonTitle.toLowerCase()) ||
-          (lessonType === 'group' && tag.toLowerCase().includes('グループ')) ||
-          (lessonType === 'private' && tag.toLowerCase().includes('プライベート')) ||
-          (lessonType === 'trial' && tag.toLowerCase().includes('体験'))
-        )
-      )
+    return videoContents.filter(
+      video =>
+        video.isActive &&
+        (video.category === 'lesson-scene' ||
+          video.tags.some(
+            tag =>
+              tag.toLowerCase().includes(lessonType.toLowerCase()) ||
+              tag.toLowerCase().includes(lessonTitle.toLowerCase()) ||
+              (lessonType === 'group' &&
+                tag.toLowerCase().includes('グループ')) ||
+              (lessonType === 'private' &&
+                tag.toLowerCase().includes('プライベート')) ||
+              (lessonType === 'trial' && tag.toLowerCase().includes('体験'))
+          ))
     );
   }, [lessonType, lessonTitle]);
 
   // メインレッスン動画（最も関連性の高い動画）
   const mainVideo = useMemo(() => {
     // レッスンタイプに最も関連する動画を探す
-    const typeSpecificVideo = lessonVideos.find(video => 
-      video.tags.some(tag => 
-        tag.toLowerCase().includes(lessonType.toLowerCase()) ||
-        (lessonType === 'group' && tag.toLowerCase().includes('グループ')) ||
-        (lessonType === 'private' && tag.toLowerCase().includes('プライベート')) ||
-        (lessonType === 'trial' && tag.toLowerCase().includes('体験'))
+    const typeSpecificVideo = lessonVideos.find(video =>
+      video.tags.some(
+        tag =>
+          tag.toLowerCase().includes(lessonType.toLowerCase()) ||
+          (lessonType === 'group' && tag.toLowerCase().includes('グループ')) ||
+          (lessonType === 'private' &&
+            tag.toLowerCase().includes('プライベート')) ||
+          (lessonType === 'trial' && tag.toLowerCase().includes('体験'))
       )
     );
-    
+
     return typeSpecificVideo || lessonVideos[0];
   }, [lessonVideos, lessonType]);
 
@@ -62,11 +71,11 @@ export function LessonVideos({ lessonType, lessonTitle, className }: LessonVideo
     <div className={className}>
       {/* メインレッスン動画 */}
       {mainVideo && (
-        <Card className="p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <Card className="mb-8 p-8">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">
             レッスン紹介動画
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="mb-6 text-gray-600">
             実際の{lessonTitle}の様子をご覧ください
           </p>
           <VideoCard
@@ -82,10 +91,10 @@ export function LessonVideos({ lessonType, lessonTitle, className }: LessonVideo
       {/* 関連レッスン動画 */}
       {relatedVideos.length > 0 && (
         <Card className="p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">
+          <h3 className="mb-6 text-xl font-bold text-gray-900">
             関連レッスン動画
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid gap-6 md:grid-cols-2">
             {relatedVideos.slice(0, 4).map(video => (
               <VideoCard
                 key={video.id}
@@ -97,16 +106,26 @@ export function LessonVideos({ lessonType, lessonTitle, className }: LessonVideo
               />
             ))}
           </div>
-          
+
           {relatedVideos.length > 4 && (
             <div className="mt-6 text-center">
               <a
                 href="/videos"
-                className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
+                className="inline-flex items-center font-medium text-blue-600 hover:text-blue-700"
               >
                 すべてのレッスン動画を見る
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="ml-1 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
             </div>

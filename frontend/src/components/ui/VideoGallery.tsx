@@ -6,7 +6,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { VideoContent, VideoSection, VIDEO_CATEGORIES } from '@/types/video';
+import { VideoContent, VIDEO_CATEGORIES } from '@/types/video';
+import type { VideoSection } from '@/types/video';
 import { VideoCard, VideoCardSkeleton } from '@/components/ui/VideoCard';
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed';
 import { Modal } from '@/components/ui/Modal';
@@ -27,7 +28,7 @@ export function VideoGallery({
   showCategories = true,
   showSearch = true,
   showFilters = true,
-  className
+  className,
 }: VideoGalleryProps) {
   const [selectedVideo, setSelectedVideo] = useState<VideoContent | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,10 +52,11 @@ export function VideoGallery({
     // 検索フィルター
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      videos = videos.filter(video =>
-        video.title.toLowerCase().includes(query) ||
-        video.description.toLowerCase().includes(query) ||
-        video.tags.some(tag => tag.toLowerCase().includes(query))
+      videos = videos.filter(
+        video =>
+          video.title.toLowerCase().includes(query) ||
+          video.description.toLowerCase().includes(query) ||
+          video.tags.some(tag => tag.toLowerCase().includes(query))
       );
     }
 
@@ -98,8 +100,18 @@ export function VideoGallery({
                 onChange={handleSearchChange}
                 className="w-full"
                 icon={
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <svg
+                    className="h-5 w-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                 }
               />
@@ -121,7 +133,9 @@ export function VideoGallery({
                 return (
                   <Button
                     key={category}
-                    variant={selectedCategory === category ? 'primary' : 'outline'}
+                    variant={
+                      selectedCategory === category ? 'primary' : 'outline'
+                    }
                     size="sm"
                     onClick={() => handleCategoryChange(category)}
                     className="flex items-center gap-1"
@@ -140,9 +154,7 @@ export function VideoGallery({
       {(searchQuery || selectedCategory !== 'all') && (
         <div className="text-sm text-gray-600">
           {filteredVideos.length}件の動画が見つかりました
-          {searchQuery && (
-            <span> 「{searchQuery}」の検索結果</span>
-          )}
+          {searchQuery && <span> 「{searchQuery}」の検索結果</span>}
         </div>
       )}
 
@@ -152,7 +164,7 @@ export function VideoGallery({
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-900">検索結果</h2>
           {filteredVideos.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredVideos.map(video => (
                 <VideoCard
                   key={video.id}
@@ -163,12 +175,26 @@ export function VideoGallery({
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <div className="py-12 text-center">
+              <svg
+                className="mx-auto mb-4 h-16 w-16 text-gray-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1}
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
               </svg>
-              <p className="text-gray-500 text-lg">該当する動画が見つかりませんでした</p>
-              <p className="text-gray-400 text-sm mt-2">検索条件を変更してお試しください</p>
+              <p className="text-lg text-gray-500">
+                該当する動画が見つかりませんでした
+              </p>
+              <p className="mt-2 text-sm text-gray-400">
+                検索条件を変更してお試しください
+              </p>
             </div>
           )}
         </div>
@@ -186,10 +212,7 @@ export function VideoGallery({
 
       {/* 動画モーダル */}
       {selectedVideo && (
-        <VideoModal
-          video={selectedVideo}
-          onClose={handleCloseModal}
-        />
+        <VideoModal video={selectedVideo} onClose={handleCloseModal} />
       )}
     </div>
   );
@@ -202,10 +225,16 @@ interface VideoSectionProps {
   isLoading?: boolean;
 }
 
-function VideoSection({ section, onVideoClick, isLoading = false }: VideoSectionProps) {
+function VideoSection({
+  section,
+  onVideoClick,
+  isLoading = false,
+}: VideoSectionProps) {
   const [showAll, setShowAll] = useState(false);
-  
-  const displayVideos = showAll ? section.videos : section.videos.slice(0, section.maxVideos || 4);
+
+  const displayVideos = showAll
+    ? section.videos
+    : section.videos.slice(0, section.maxVideos || 4);
   const hasMore = section.videos.length > (section.maxVideos || 4);
 
   if (section.videos.length === 0) {
@@ -217,12 +246,12 @@ function VideoSection({ section, onVideoClick, isLoading = false }: VideoSection
       {/* セクションヘッダー */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
             <span>{VIDEO_CATEGORIES[section.category].icon}</span>
             <span>{section.title}</span>
           </h2>
           {section.description && (
-            <p className="text-gray-600 mt-1">{section.description}</p>
+            <p className="mt-1 text-gray-600">{section.description}</p>
           )}
         </div>
         {hasMore && (
@@ -238,18 +267,20 @@ function VideoSection({ section, onVideoClick, isLoading = false }: VideoSection
 
       {/* 動画グリッド */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <VideoCardSkeleton key={index} />
           ))}
         </div>
       ) : (
-        <div className={cn(
-          'grid gap-6',
-          section.layout === 'carousel' 
-            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-        )}>
+        <div
+          className={cn(
+            'grid gap-6',
+            section.layout === 'carousel'
+              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+          )}
+        >
           {displayVideos.map(video => (
             <VideoCard
               key={video.id}
@@ -280,35 +311,35 @@ function VideoModal({ video, onClose }: VideoModalProps) {
             videoId={video.videoId}
             title={video.title}
             autoplay={true}
-            className="w-full h-full"
+            className="h-full w-full"
           />
         </div>
 
         {/* 動画情報 */}
         <div className="space-y-3">
           <div className="flex items-start justify-between">
-            <h2 className="text-xl font-bold text-gray-900 flex-1 pr-4">
+            <h2 className="flex-1 pr-4 text-xl font-bold text-gray-900">
               {video.title}
             </h2>
             <div className="flex items-center gap-2">
-              <span className={cn(
-                'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium text-white',
-                `bg-${VIDEO_CATEGORIES[video.category].color}-500`
-              )}>
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium text-white',
+                  `bg-${VIDEO_CATEGORIES[video.category].color}-500`
+                )}
+              >
                 <span>{VIDEO_CATEGORIES[video.category].icon}</span>
                 <span>{VIDEO_CATEGORIES[video.category].label}</span>
               </span>
               {video.featured && (
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-500 text-white">
+                <span className="inline-flex items-center rounded-full bg-yellow-500 px-2 py-1 text-xs font-medium text-white">
                   ⭐ 注目
                 </span>
               )}
             </div>
           </div>
 
-          <p className="text-gray-600 leading-relaxed">
-            {video.description}
-          </p>
+          <p className="leading-relaxed text-gray-600">{video.description}</p>
 
           {/* タグ */}
           {video.tags.length > 0 && (
@@ -316,7 +347,7 @@ function VideoModal({ video, onClose }: VideoModalProps) {
               {video.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"
+                  className="rounded-full bg-gray-100 px-2 py-1 text-sm font-medium text-gray-700"
                 >
                   {tag}
                 </span>
@@ -325,17 +356,19 @@ function VideoModal({ video, onClose }: VideoModalProps) {
           )}
 
           {/* メタ情報 */}
-          <div className="flex items-center justify-between text-sm text-gray-500 pt-2 border-t">
+          <div className="flex items-center justify-between border-t pt-2 text-sm text-gray-500">
             <span>
-              公開日: {video.publishedAt.toLocaleDateString('ja-JP', {
+              公開日:{' '}
+              {video.publishedAt.toLocaleDateString('ja-JP', {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
+                day: 'numeric',
               })}
             </span>
             {video.duration && (
               <span>
-                再生時間: {Math.floor(video.duration / 60)}分{video.duration % 60}秒
+                再生時間: {Math.floor(video.duration / 60)}分
+                {video.duration % 60}秒
               </span>
             )}
           </div>

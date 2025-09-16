@@ -36,9 +36,18 @@ class Settings(BaseSettings):
     instagram_url: str = ""
 
     # セキュリティ設定
-    secret_key: str = "your-secret-key-change-in-production"
+    secret_key: str = "your-secret-key-change-in-production-minimum-32-characters"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
+    
+    # レート制限設定
+    rate_limit_requests: int = 100
+    rate_limit_window: int = 3600
+    
+    # セキュリティ機能の有効/無効
+    enable_security_headers: bool = True
+    enable_input_validation: bool = True
+    enable_rate_limiting: bool = True
 
     model_config = ConfigDict(
         env_file=".env",

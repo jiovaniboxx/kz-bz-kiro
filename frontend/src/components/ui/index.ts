@@ -17,7 +17,12 @@ export { Container, Grid, Flex } from './Container';
 export { Accordion, AccordionItem } from './Accordion';
 export { Tabs, TabPanel } from './Tabs';
 export { ToastContainer } from './Toast';
-export { YouTubeEmbed, getYouTubeVideoInfo, extractYouTubeVideoId, getYouTubeThumbnail } from './YouTubeEmbed';
+export {
+  YouTubeEmbed,
+  getYouTubeVideoInfo,
+  extractYouTubeVideoId,
+  getYouTubeThumbnail,
+} from './YouTubeEmbed';
 
 // 型定義のエクスポート
 export type { InputProps } from './Input';

@@ -5,7 +5,11 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { Contact, ContactFormData, ContactValidationError } from '@/domain/contact';
+import {
+  Contact,
+  ContactFormData,
+  ContactValidationError,
+} from '@/domain/contact';
 import { eventBus, EVENT_TYPES } from '@/utils/eventBus';
 
 interface ContactState {
@@ -30,7 +34,7 @@ const initialFormData: ContactFormData = {
   message: '',
   phone: '',
   lessonType: undefined,
-  preferredContact: 'email'
+  preferredContact: 'email',
 };
 
 export const useContactStore = create<ContactState>()(
@@ -44,20 +48,20 @@ export const useContactStore = create<ContactState>()(
       formData: initialFormData,
 
       // Actions
-      updateFormData: (data) => {
-        set((state) => ({
+      updateFormData: data => {
+        set(state => ({
           formData: { ...state.formData, ...data },
           validationErrors: {}, // フォーム更新時にバリデーションエラーをクリア
-          error: null
+          error: null,
         }));
       },
 
-      submitContact: async (contactData) => {
-        set({ 
-          isSubmitting: true, 
-          error: null, 
+      submitContact: async contactData => {
+        set({
+          isSubmitting: true,
+          error: null,
           validationErrors: {},
-          isSuccess: false 
+          isSuccess: false,
         });
 
         try {
@@ -74,7 +78,7 @@ export const useContactStore = create<ContactState>()(
           // API呼び出し
           const response = await fetch('/api/contact', {
             method: 'POST',
-            headers: { 
+            headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(contact.toApiPayload()),
@@ -88,10 +92,10 @@ export const useContactStore = create<ContactState>()(
           const result = await response.json();
 
           // 成功時の処理
-          set({ 
-            isSubmitting: false, 
+          set({
+            isSubmitting: false,
             isSuccess: true,
-            formData: initialFormData // フォームをリセット
+            formData: initialFormData, // フォームをリセット
           });
 
           // 成功イベント発行
@@ -100,34 +104,32 @@ export const useContactStore = create<ContactState>()(
 
           // 成功通知イベント
           eventBus.emit(EVENT_TYPES.SUCCESS, {
-            message: result.message || 'お問い合わせを送信しました'
+            message: result.message || 'お問い合わせを送信しました',
           });
-
         } catch (error) {
           if (error instanceof ContactValidationError) {
             // バリデーションエラーの場合
-            set({ 
-              isSubmitting: false, 
-              validationErrors: error.errors 
+            set({
+              isSubmitting: false,
+              validationErrors: error.errors,
             });
 
             eventBus.emit(EVENT_TYPES.CONTACT_VALIDATION_FAILED, {
-              errors: error.errors
+              errors: error.errors,
             });
           } else {
             // その他のエラー
-            const errorMessage = error instanceof Error 
-              ? error.message 
-              : 'エラーが発生しました';
+            const errorMessage =
+              error instanceof Error ? error.message : 'エラーが発生しました';
 
-            set({ 
-              isSubmitting: false, 
-              error: errorMessage 
+            set({
+              isSubmitting: false,
+              error: errorMessage,
             });
 
             eventBus.emit(EVENT_TYPES.ERROR, {
               message: errorMessage,
-              source: 'contact_submission'
+              source: 'contact_submission',
             });
           }
         }
@@ -139,11 +141,11 @@ export const useContactStore = create<ContactState>()(
           error: null,
           validationErrors: {},
           isSuccess: false,
-          isSubmitting: false
+          isSubmitting: false,
         });
 
         eventBus.emit(EVENT_TYPES.FORM_RESET, {
-          formType: 'contact'
+          formType: 'contact',
         });
       },
 
@@ -151,9 +153,9 @@ export const useContactStore = create<ContactState>()(
         set({ error: null, validationErrors: {} });
       },
 
-      setValidationErrors: (errors) => {
+      setValidationErrors: errors => {
         set({ validationErrors: errors });
-      }
+      },
     }),
     {
       name: 'contact-store', // devtools用の名前
@@ -162,8 +164,12 @@ export const useContactStore = create<ContactState>()(
 );
 
 // セレクター関数（パフォーマンス最適化用）
-export const useContactFormData = () => useContactStore((state) => state.formData);
-export const useContactSubmitting = () => useContactStore((state) => state.isSubmitting);
-export const useContactSuccess = () => useContactStore((state) => state.isSuccess);
-export const useContactError = () => useContactStore((state) => state.error);
-export const useContactValidationErrors = () => useContactStore((state) => state.validationErrors);
+export const useContactFormData = () =>
+  useContactStore(state => state.formData);
+export const useContactSubmitting = () =>
+  useContactStore(state => state.isSubmitting);
+export const useContactSuccess = () =>
+  useContactStore(state => state.isSuccess);
+export const useContactError = () => useContactStore(state => state.error);
+export const useContactValidationErrors = () =>
+  useContactStore(state => state.validationErrors);

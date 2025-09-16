@@ -8,11 +8,11 @@ interface SectionProps {
   padding?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const Section = ({ 
-  children, 
-  className, 
+const Section = ({
+  children,
+  className,
   background = 'white',
-  padding = 'lg'
+  padding = 'lg',
 }: SectionProps) => {
   const backgroundClasses = {
     white: 'bg-white',
@@ -35,9 +35,7 @@ const Section = ({
         className
       )}
     >
-      <div className="container-custom">
-        {children}
-      </div>
+      <div className="container-custom">{children}</div>
     </section>
   );
 };
@@ -50,19 +48,15 @@ interface SectionHeaderProps {
   className?: string;
 }
 
-const SectionHeader = ({ 
-  title, 
-  subtitle, 
-  description, 
+const SectionHeader = ({
+  title,
+  subtitle,
+  description,
   centered = true,
-  className 
+  className,
 }: SectionHeaderProps) => {
   return (
-    <div className={cn(
-      'mb-12',
-      centered && 'text-center',
-      className
-    )}>
+    <div className={cn('mb-12', centered && 'text-center', className)}>
       {subtitle && (
         <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary-600">
           {subtitle}
@@ -72,10 +66,12 @@ const SectionHeader = ({
         {title}
       </h2>
       {description && (
-        <p className={cn(
-          'text-lg text-gray-600',
-          centered && 'mx-auto max-w-3xl'
-        )}>
+        <p
+          className={cn(
+            'text-lg text-gray-600',
+            centered && 'mx-auto max-w-3xl'
+          )}
+        >
           {description}
         </p>
       )}

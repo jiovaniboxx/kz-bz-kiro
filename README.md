@@ -115,6 +115,24 @@ npm run format
 
 ## 🧪 テスト
 
+### Docker Compose環境での動作確認
+
+```bash
+# 🚀 完全なテストスイート実行（推奨）
+./scripts/run-tests.sh
+
+# 📦 サービス起動とセットアップ
+./scripts/test-setup.sh
+
+# 🔧 APIテスト
+./scripts/test-api.sh
+
+# 🎨 フロントエンドテスト
+./scripts/test-frontend.sh
+```
+
+### 個別テスト実行
+
 ```bash
 # 全テスト実行
 npm run test
@@ -127,7 +145,21 @@ cd backend && uv run pytest
 
 # E2Eテスト
 cd frontend && npm run test:e2e
+
+# Docker環境でのテスト
+docker-compose exec backend python -m pytest tests/ -v
+docker-compose exec frontend npm test -- --watchAll=false
 ```
+
+### テスト内容
+
+- ✅ **ヘルスチェック**: サービスの起動確認
+- ✅ **API機能テスト**: 問い合わせ作成・取得
+- ✅ **セキュリティテスト**: XSS・SQLインジェクション対策
+- ✅ **バリデーションテスト**: 入力値検証
+- ✅ **統合テスト**: フロントエンド↔バックエンド連携
+- ✅ **パフォーマンステスト**: レスポンス時間測定
+- ✅ **レート制限テスト**: セキュリティ機能確認
 
 ## 📝 API仕様
 
