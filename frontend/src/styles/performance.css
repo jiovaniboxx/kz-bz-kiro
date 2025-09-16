@@ -117,6 +117,7 @@
   left: -1px;
   width: 1px;
   height: 1px;
+  background: url(attr(data-preload-src url));
   opacity: 0;
   pointer-events: none;
 }
@@ -126,13 +127,13 @@
   .mobile-optimized {
     contain: layout style paint;
   }
-
+  
   /* タッチ操作の最適化 */
   .touch-optimized {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
-
+  
   /* モバイルでのアニメーション削減 */
   @media (prefers-reduced-motion: reduce) {
     .mobile-animation {
@@ -161,7 +162,7 @@
   .no-print {
     display: none !important;
   }
-
+  
   .print-optimized {
     color: black !important;
     background: white !important;
@@ -183,9 +184,7 @@
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .fade-in.loaded {

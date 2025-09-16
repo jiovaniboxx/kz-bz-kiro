@@ -24,16 +24,11 @@ class Email:
         if not self.value:
             raise ValueError("メールアドレスは必須です")
         
-        # 正規化（小文字化とトリム）
-        normalized_value = self.value.lower().strip()
-        
-        if not normalized_value:
-            raise ValueError("メールアドレスは必須です")
-        
-        if not self._is_valid_email(normalized_value):
+        if not self._is_valid_email(self.value):
             raise ValueError(f"無効なメールアドレス形式です: {self.value}")
         
-        object.__setattr__(self, 'value', normalized_value)
+        # 正規化（小文字化）
+        object.__setattr__(self, 'value', self.value.lower().strip())
     
     @staticmethod
     def _is_valid_email(email: str) -> bool:

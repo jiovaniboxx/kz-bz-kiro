@@ -28,12 +28,12 @@ export class NewRelicMonitoring {
           trustKey: applicationId,
           agentID: applicationId,
           licenseKey: licenseKey,
-          applicationID: applicationId,
+          applicationID: applicationId
         };
         window.NREUM.init = {
           distributed_tracing: { enabled: true },
           privacy: { cookies_enabled: true },
-          ajax: { deny_list: ['bam.nr-data.net'] },
+          ajax: { deny_list: ['bam.nr-data.net'] }
         };
       }
     };
@@ -86,18 +86,18 @@ export class GrafanaMetrics {
       labels: {
         app: 'english-cafe',
         environment: process.env.NODE_ENV || 'development',
-        ...labels,
-      },
+        ...labels
+      }
     };
 
     try {
       await fetch(this.endpoint, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify([metric]),
+        body: JSON.stringify([metric])
       });
     } catch (error) {
       console.error('Failed to send metric to Grafana:', error);
@@ -112,7 +112,7 @@ export class GrafanaMetrics {
   ): Promise<void> {
     await this.sendMetric(`web_vitals_${name.toLowerCase()}`, value, {
       metric_type: 'web_vital',
-      rating: rating,
+      rating: rating
     });
   }
 
@@ -125,7 +125,7 @@ export class GrafanaMetrics {
     await this.sendMetric('user_actions_total', 1, {
       action: action,
       page: page,
-      ...additionalData,
+      ...additionalData
     });
   }
 
@@ -138,7 +138,7 @@ export class GrafanaMetrics {
     await this.sendMetric('errors_total', 1, {
       error_type: errorType,
       page: page,
-      message: message || 'unknown',
+      message: message || 'unknown'
     });
   }
 }
@@ -147,7 +147,7 @@ export class GrafanaMetrics {
 export class ApplicationMonitoring {
   private static initialized = false;
 
-  static async init(): Promise<void> {
+  static init(): void {
     if (this.initialized) return;
 
     // New Relic の初期化
@@ -157,7 +157,7 @@ export class ApplicationMonitoring {
     this.setupErrorHandling();
 
     // パフォーマンス監視の設定
-    await this.setupPerformanceMonitoring();
+    this.setupPerformanceMonitoring();
 
     // ユーザーアクション追跡の設定
     this.setupUserActionTracking();
@@ -169,109 +169,68 @@ export class ApplicationMonitoring {
     if (typeof window === 'undefined') return;
 
     // グローバルエラーハンドラー
-    window.addEventListener('error', event => {
+    window.addEventListener('error', (event) => {
       const error = event.error || new Error(event.message);
-
+      
       NewRelicMonitoring.noticeError(error, {
         filename: event.filename,
         lineno: event.lineno,
-        colno: event.colno,
+        colno: event.colno
       });
 
-      GrafanaMetrics.recordError(
-        'javascript_error',
-        window.location.pathname,
-        error.message
-      );
+      GrafanaMetrics.recordError('javascript_error', window.location.pathname, error.message);
     });
 
     // Promise rejection ハンドラー
-    window.addEventListener('unhandledrejection', event => {
+    window.addEventListener('unhandledrejection', (event) => {
       const error = new Error(event.reason);
-
+      
       NewRelicMonitoring.noticeError(error, {
-        type: 'unhandled_promise_rejection',
+        type: 'unhandled_promise_rejection'
       });
 
-      GrafanaMetrics.recordError(
-        'promise_rejection',
-        window.location.pathname,
-        event.reason
-      );
+      GrafanaMetrics.recordError('promise_rejection', window.location.pathname, event.reason);
     });
   }
 
-  private static async setupPerformanceMonitoring(): Promise<void> {
+  private static setupPerformanceMonitoring(): void {
     if (typeof window === 'undefined') return;
 
     // Web Vitals の監視
-    try {
-      const { onCLS, onINP, onFCP, onLCP, onTTFB } = await import(
-        'web-vitals'
-      );
-
-      onCLS((metric: any) => {
-        const rating =
-          metric.value <= 0.1
-            ? 'good'
-            : metric.value <= 0.25
-              ? 'needs-improvement'
-              : 'poor';
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS((metric) => {
+        const rating = metric.value <= 0.1 ? 'good' : metric.value <= 0.25 ? 'needs-improvement' : 'poor';
         GrafanaMetrics.sendWebVital('CLS', metric.value, rating);
       });
 
-      onINP((metric: any) => {
-        const rating =
-          metric.value <= 200
-            ? 'good'
-            : metric.value <= 500
-              ? 'needs-improvement'
-              : 'poor';
-        GrafanaMetrics.sendWebVital('INP', metric.value, rating);
+      getFID((metric) => {
+        const rating = metric.value <= 100 ? 'good' : metric.value <= 300 ? 'needs-improvement' : 'poor';
+        GrafanaMetrics.sendWebVital('FID', metric.value, rating);
       });
 
-      onFCP((metric: any) => {
-        const rating =
-          metric.value <= 1800
-            ? 'good'
-            : metric.value <= 3000
-              ? 'needs-improvement'
-              : 'poor';
+      getFCP((metric) => {
+        const rating = metric.value <= 1800 ? 'good' : metric.value <= 3000 ? 'needs-improvement' : 'poor';
         GrafanaMetrics.sendWebVital('FCP', metric.value, rating);
       });
 
-      onLCP((metric: any) => {
-        const rating =
-          metric.value <= 2500
-            ? 'good'
-            : metric.value <= 4000
-              ? 'needs-improvement'
-              : 'poor';
+      getLCP((metric) => {
+        const rating = metric.value <= 2500 ? 'good' : metric.value <= 4000 ? 'needs-improvement' : 'poor';
         GrafanaMetrics.sendWebVital('LCP', metric.value, rating);
       });
 
-      onTTFB((metric: any) => {
-        const rating =
-          metric.value <= 800
-            ? 'good'
-            : metric.value <= 1800
-              ? 'needs-improvement'
-              : 'poor';
+      getTTFB((metric) => {
+        const rating = metric.value <= 800 ? 'good' : metric.value <= 1800 ? 'needs-improvement' : 'poor';
         GrafanaMetrics.sendWebVital('TTFB', metric.value, rating);
       });
-    } catch (error) {
-      console.error('Failed to load web-vitals:', error);
-    }
+    }).catch(console.error);
 
     // ページロード時間の監視
     window.addEventListener('load', () => {
-      const navigation = performance.getEntriesByType(
-        'navigation'
-      )[0] as PerformanceNavigationTiming;
+      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
       if (navigation) {
         const loadTime = navigation.loadEventEnd - navigation.fetchStart;
         GrafanaMetrics.sendMetric('page_load_time', loadTime, {
-          page: window.location.pathname,
+          page: window.location.pathname
         });
       }
     });
@@ -281,40 +240,35 @@ export class ApplicationMonitoring {
     if (typeof window === 'undefined') return;
 
     // フォーム送信の追跡
-    document.addEventListener('submit', event => {
+    document.addEventListener('submit', (event) => {
       const form = event.target as HTMLFormElement;
       const formName = form.name || form.id || 'unknown';
-
+      
       NewRelicMonitoring.addPageAction('form_submit', {
         form_name: formName,
-        page: window.location.pathname,
+        page: window.location.pathname
       });
 
       GrafanaMetrics.recordUserAction('form_submit', window.location.pathname, {
-        form_name: formName,
+        form_name: formName
       });
     });
 
     // ボタンクリックの追跡
-    document.addEventListener('click', event => {
+    document.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       if (target.tagName === 'BUTTON' || target.closest('button')) {
-        const button =
-          target.tagName === 'BUTTON' ? target : target.closest('button');
+        const button = target.tagName === 'BUTTON' ? target : target.closest('button');
         const buttonText = button?.textContent?.trim() || 'unknown';
-
+        
         NewRelicMonitoring.addPageAction('button_click', {
           button_text: buttonText,
-          page: window.location.pathname,
+          page: window.location.pathname
         });
 
-        GrafanaMetrics.recordUserAction(
-          'button_click',
-          window.location.pathname,
-          {
-            button_text: buttonText,
-          }
-        );
+        GrafanaMetrics.recordUserAction('button_click', window.location.pathname, {
+          button_text: buttonText
+        });
       }
     });
 
@@ -322,11 +276,11 @@ export class ApplicationMonitoring {
     const trackPageView = () => {
       NewRelicMonitoring.addPageAction('page_view', {
         page: window.location.pathname,
-        referrer: document.referrer,
+        referrer: document.referrer
       });
 
       GrafanaMetrics.recordUserAction('page_view', window.location.pathname, {
-        referrer: document.referrer || 'direct',
+        referrer: document.referrer || 'direct'
       });
     };
 
@@ -344,7 +298,7 @@ export class ApplicationMonitoring {
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true,
+      subtree: true
     });
   }
 
@@ -356,27 +310,24 @@ export class ApplicationMonitoring {
   ): void {
     NewRelicMonitoring.addPageAction(metricName, {
       value: value,
-      ...attributes,
+      ...attributes
     });
 
     GrafanaMetrics.sendMetric(metricName, value, attributes);
   }
 
   // レッスン予約の追跡
-  static recordLessonInquiry(
-    lessonType: string,
-    instructorName?: string
-  ): void {
+  static recordLessonInquiry(lessonType: string, instructorName?: string): void {
     this.recordBusinessMetric('lesson_inquiry', 1, {
       lesson_type: lessonType,
-      instructor: instructorName || 'any',
+      instructor: instructorName || 'any'
     });
   }
 
   // 問い合わせフォーム送信の追跡
   static recordContactSubmission(contactType: string): void {
     this.recordBusinessMetric('contact_submission', 1, {
-      contact_type: contactType,
+      contact_type: contactType
     });
   }
 
@@ -384,7 +335,7 @@ export class ApplicationMonitoring {
   static recordVideoPlay(videoId: string, videoTitle: string): void {
     this.recordBusinessMetric('video_play', 1, {
       video_id: videoId,
-      video_title: videoTitle,
+      video_title: videoTitle
     });
   }
 }

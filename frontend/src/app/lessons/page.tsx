@@ -10,27 +10,20 @@ export const metadata: Metadata = generatePageMetadata(
   'あなたに最適な学習スタイルを見つけて、英会話力を向上させましょう。グループレッスン、プライベートレッスン、無料体験レッスンをご用意しています。',
   '/lessons',
   undefined,
-  [
-    '料金',
-    'グループレッスン',
-    'プライベートレッスン',
-    '無料体験',
-    '月謝制',
-    '都度払い',
-  ]
+  ['料金', 'グループレッスン', 'プライベートレッスン', '無料体験', '月謝制', '都度払い']
 );
 
 export default function LessonsPage() {
   return (
     <main>
       {/* ページヘッダー */}
-      <section className="bg-gradient-to-r from-primary-600 to-primary-700 py-16 text-white">
+      <section className="py-16 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
         <Container>
           <div className="text-center">
-            <h1 className="mb-4 text-4xl font-bold md:text-5xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
               レッスン・料金
             </h1>
-            <p className="mx-auto max-w-2xl text-xl text-primary-100">
+            <p className="text-xl text-primary-100 max-w-2xl mx-auto">
               あなたに最適な学習スタイルを見つけて、英会話力を向上させましょう
             </p>
           </div>
@@ -39,12 +32,12 @@ export default function LessonsPage() {
 
       {/* レッスン一覧 */}
       <LessonsGridSection />
-
+      
       {/* 特徴セクション */}
       <FeaturesSection />
-
+      
       {/* CTA */}
-      <CTASection
+      <CTASection 
         variant="primary"
         title="今すぐレッスンを始めませんか？"
         description="無料体験レッスンで、あなたに最適な学習方法を見つけましょう。経験豊富なネイティブ講師がお待ちしています。"

@@ -18,7 +18,7 @@ export interface VideoContent {
   featured: boolean; // 注目動画かどうか
 }
 
-export type VideoCategory =
+export type VideoCategory = 
   | 'instructor-introduction' // 講師紹介
   | 'lesson-scene' // レッスン風景
   | 'cafe-introduction' // カフェ紹介
@@ -62,31 +62,31 @@ export const VIDEO_CATEGORIES = {
   'instructor-introduction': {
     label: '講師紹介',
     icon: '👨‍🏫',
-    color: 'blue',
+    color: 'blue'
   },
   'lesson-scene': {
     label: 'レッスン風景',
     icon: '📚',
-    color: 'green',
+    color: 'green'
   },
   'cafe-introduction': {
     label: 'カフェ紹介',
     icon: '☕',
-    color: 'amber',
+    color: 'amber'
   },
   'student-testimonial': {
     label: '生徒の声',
     icon: '💬',
-    color: 'purple',
+    color: 'purple'
   },
-  event: {
+  'event': {
     label: 'イベント',
     icon: '🎉',
-    color: 'pink',
+    color: 'pink'
   },
-  other: {
+  'other': {
     label: 'その他',
     icon: '📹',
-    color: 'gray',
-  },
+    color: 'gray'
+  }
 } as const;

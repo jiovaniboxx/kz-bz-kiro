@@ -28,12 +28,7 @@ export class Contact {
     public readonly message: string,
     public readonly phone?: string,
     public readonly lessonType?: 'group' | 'private' | 'trial' | 'other',
-    public readonly preferredContact:
-      | 'email'
-      | 'phone'
-      | 'line'
-      | 'facebook'
-      | 'instagram' = 'email'
+    public readonly preferredContact: 'email' | 'phone' | 'line' | 'facebook' | 'instagram' = 'email'
   ) {
     this.validate();
   }
@@ -83,8 +78,8 @@ export class Contact {
       payload: {
         contactId: crypto.randomUUID(),
         email: this.email,
-        submittedAt: new Date(),
-      },
+        submittedAt: new Date()
+      }
     };
   }
 
@@ -95,7 +90,7 @@ export class Contact {
       message: this.message,
       phone: this.phone,
       lessonType: this.lessonType,
-      preferredContact: this.preferredContact,
+      preferredContact: this.preferredContact
     };
   }
 }

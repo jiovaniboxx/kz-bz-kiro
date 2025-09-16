@@ -293,9 +293,8 @@ variable "grafana_api_key" {
   type        = string
   sensitive   = true
   default     = ""
-}
-
-# Render Configuration
+}# Rend
+er Configuration
 variable "render_api_key" {
   description = "Render API key"
   type        = string

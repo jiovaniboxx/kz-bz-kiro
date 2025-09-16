@@ -97,7 +97,7 @@ export const EVENT_TYPES = {
   FORM_RESET: 'FORM_RESET',
   NAVIGATION: 'NAVIGATION',
   ERROR: 'ERROR',
-  SUCCESS: 'SUCCESS',
+  SUCCESS: 'SUCCESS'
 } as const;
 
-export type EventType = (typeof EVENT_TYPES)[keyof typeof EVENT_TYPES];
+export type EventType = typeof EVENT_TYPES[keyof typeof EVENT_TYPES];

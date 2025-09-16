@@ -18,16 +18,10 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
 
   return (
     <>
-      <Script id="google-analytics-loader" strategy="afterInteractive">
-        {`
-          (function() {
-            var script = document.createElement('script');
-            script.src = 'https://www.googletagmanager.com/gtag/js?id=${measurementId}';
-            script.async = true;
-            document.head.appendChild(script);
-          })();
-        `}
-      </Script>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+        strategy="afterInteractive"
+      />
       <Script id="google-analytics" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
@@ -44,10 +38,7 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
 }
 
 // イベント追跡用のヘルパー関数
-export const trackEvent = (
-  eventName: string,
-  parameters?: Record<string, any>
-) => {
+export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', eventName, parameters);
   }
@@ -58,7 +49,7 @@ export const trackContactFormSubmit = (formType: string) => {
   trackEvent('contact_form_submit', {
     form_type: formType,
     event_category: 'engagement',
-    event_label: 'Contact Form',
+    event_label: 'Contact Form'
   });
 };
 
@@ -66,7 +57,7 @@ export const trackLessonInquiry = (lessonType: string) => {
   trackEvent('lesson_inquiry', {
     lesson_type: lessonType,
     event_category: 'engagement',
-    event_label: 'Lesson Inquiry',
+    event_label: 'Lesson Inquiry'
   });
 };
 
@@ -75,7 +66,7 @@ export const trackVideoPlay = (videoId: string, videoTitle: string) => {
     video_id: videoId,
     video_title: videoTitle,
     event_category: 'engagement',
-    event_label: 'Video Play',
+    event_label: 'Video Play'
   });
 };
 
@@ -83,7 +74,7 @@ export const trackInstructorView = (instructorName: string) => {
   trackEvent('instructor_view', {
     instructor_name: instructorName,
     event_category: 'engagement',
-    event_label: 'Instructor Profile View',
+    event_label: 'Instructor Profile View'
   });
 };
 

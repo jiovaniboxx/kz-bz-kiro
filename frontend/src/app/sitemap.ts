@@ -3,7 +3,7 @@ import { SITE_CONFIG } from '@/utils/metadata';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_CONFIG.url;
-
+  
   // 静的ページ
   const staticPages = [
     {
@@ -48,12 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // レッスンページ（実際の実装では API から取得）
-  const lessonIds = [
-    'trial-lesson',
-    'group-conversation',
-    'private-lesson',
-    'business-english',
-  ];
+  const lessonIds = ['trial-lesson', 'group-conversation', 'private-lesson', 'business-english'];
   const lessonPages = lessonIds.map(id => ({
     url: `${baseUrl}/lessons/${id}`,
     lastModified: new Date(),

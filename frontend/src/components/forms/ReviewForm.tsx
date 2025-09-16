@@ -27,11 +27,7 @@ interface ReviewFormProps {
   className?: string;
 }
 
-export function ReviewForm({
-  onSubmit,
-  isSubmitting = false,
-  className,
-}: ReviewFormProps) {
+export function ReviewForm({ onSubmit, isSubmitting = false, className }: ReviewFormProps) {
   const [formData, setFormData] = useState<ReviewFormData>({
     studentName: '',
     email: '',
@@ -41,18 +37,16 @@ export function ReviewForm({
     teacherName: '',
     course: '',
     studyPeriod: '',
-    wouldRecommend: true,
+    wouldRecommend: true
   });
 
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof ReviewFormData, string>>
-  >({});
+  const [errors, setErrors] = useState<Partial<Record<keyof ReviewFormData, string>>>({});
 
   const lessonTypeOptions = [
     { value: '', label: '選択してください' },
     { value: 'group', label: 'グループレッスン' },
     { value: 'private', label: 'プライベートレッスン' },
-    { value: 'trial', label: '体験レッスン' },
+    { value: 'trial', label: '体験レッスン' }
   ];
 
   const teacherOptions = [
@@ -62,7 +56,7 @@ export function ReviewForm({
     { value: 'Emma Thompson', label: 'Emma Thompson' },
     { value: 'Michael Brown', label: 'Michael Brown' },
     { value: 'Lisa Davis', label: 'Lisa Davis' },
-    { value: 'David Miller', label: 'David Miller' },
+    { value: 'David Miller', label: 'David Miller' }
   ];
 
   const studyPeriodOptions = [
@@ -71,7 +65,7 @@ export function ReviewForm({
     { value: '1-3ヶ月', label: '1-3ヶ月' },
     { value: '3-6ヶ月', label: '3-6ヶ月' },
     { value: '6ヶ月-1年', label: '6ヶ月-1年' },
-    { value: '1年以上', label: '1年以上' },
+    { value: '1年以上', label: '1年以上' }
   ];
 
   const handleInputChange = (field: keyof ReviewFormData, value: any) => {
@@ -125,13 +119,11 @@ export function ReviewForm({
         key={i}
         type="button"
         className={cn(
-          'h-8 w-8 transition-colors',
-          interactive && 'transform transition-transform hover:scale-110',
+          'w-8 h-8 transition-colors',
+          interactive && 'hover:scale-110 transform transition-transform',
           i < rating ? 'text-yellow-400' : 'text-gray-300'
         )}
-        onClick={
-          interactive ? () => handleInputChange('rating', i + 1) : undefined
-        }
+        onClick={interactive ? () => handleInputChange('rating', i + 1) : undefined}
         disabled={!interactive}
       >
         <svg fill="currentColor" viewBox="0 0 20 20">
@@ -144,7 +136,7 @@ export function ReviewForm({
   return (
     <Card className={cn('p-6', className)}>
       <div className="mb-6">
-        <h3 className="mb-2 text-xl font-bold text-gray-900">
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
           レビューを投稿する
         </h3>
         <p className="text-gray-600">
@@ -154,11 +146,11 @@ export function ReviewForm({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 基本情報 */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid md:grid-cols-2 gap-4">
           <Input
             label="お名前"
             value={formData.studentName}
-            onChange={e => handleInputChange('studentName', e.target.value)}
+            onChange={(e) => handleInputChange('studentName', e.target.value)}
             error={errors.studentName}
             required
             placeholder="山田 太郎"
@@ -167,7 +159,7 @@ export function ReviewForm({
             label="メールアドレス"
             type="email"
             value={formData.email}
-            onChange={e => handleInputChange('email', e.target.value)}
+            onChange={(e) => handleInputChange('email', e.target.value)}
             error={errors.email}
             required
             placeholder="example@email.com"
@@ -177,12 +169,12 @@ export function ReviewForm({
 
         {/* 評価 */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             総合評価 <span className="text-red-500">*</span>
           </label>
-          <div className="mb-2 flex items-center space-x-2">
+          <div className="flex items-center space-x-2 mb-2">
             {renderStars(formData.rating, true)}
-            <span className="ml-4 text-sm text-gray-600">
+            <span className="text-sm text-gray-600 ml-4">
               {formData.rating > 0 && `${formData.rating}つ星`}
             </span>
           </div>
@@ -192,12 +184,12 @@ export function ReviewForm({
         </div>
 
         {/* レッスン情報 */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid md:grid-cols-3 gap-4">
           <Select
             label="レッスンタイプ"
             options={lessonTypeOptions}
             value={formData.lessonType}
-            onChange={e => handleInputChange('lessonType', e.target.value)}
+            onChange={(e) => handleInputChange('lessonType', e.target.value)}
             error={errors.lessonType}
             required
           />
@@ -205,20 +197,20 @@ export function ReviewForm({
             label="担当講師"
             options={teacherOptions}
             value={formData.teacherName}
-            onChange={e => handleInputChange('teacherName', e.target.value)}
+            onChange={(e) => handleInputChange('teacherName', e.target.value)}
           />
           <Select
             label="受講期間"
             options={studyPeriodOptions}
             value={formData.studyPeriod}
-            onChange={e => handleInputChange('studyPeriod', e.target.value)}
+            onChange={(e) => handleInputChange('studyPeriod', e.target.value)}
           />
         </div>
 
         <Input
           label="コース名"
           value={formData.course}
-          onChange={e => handleInputChange('course', e.target.value)}
+          onChange={(e) => handleInputChange('course', e.target.value)}
           placeholder="例: ビジネス英語コース、日常英会話など"
         />
 
@@ -226,7 +218,7 @@ export function ReviewForm({
         <Textarea
           label="レビュー内容"
           value={formData.comment}
-          onChange={e => handleInputChange('comment', e.target.value)}
+          onChange={(e) => handleInputChange('comment', e.target.value)}
           error={errors.comment}
           required
           rows={6}
@@ -237,7 +229,7 @@ export function ReviewForm({
 
         {/* 推奨度 */}
         <div>
-          <label className="mb-3 block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-3">
             友人にこの英会話カフェを推奨しますか？
           </label>
           <div className="flex space-x-4">
@@ -265,9 +257,9 @@ export function ReviewForm({
         </div>
 
         {/* 注意事項 */}
-        <div className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">
-          <h4 className="mb-2 font-medium">投稿に関する注意事項：</h4>
-          <ul className="list-inside list-disc space-y-1">
+        <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+          <h4 className="font-medium mb-2">投稿に関する注意事項：</h4>
+          <ul className="space-y-1 list-disc list-inside">
             <li>投稿されたレビューは内容確認後に公開されます</li>
             <li>不適切な内容や虚偽の情報は公開されません</li>
             <li>個人情報は公開されません（お名前はイニシャル表示）</li>

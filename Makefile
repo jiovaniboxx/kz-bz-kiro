@@ -1,4 +1,4 @@
-.PHONY: help setup clean dev test lint format docker-up docker-down ci-local setup-act act yaml-lint yaml-format tf-init tf-plan tf-apply tf-destroy tf-env
+.PHONY: help setup clean dev test lint format docker-up docker-down ci-local setup-act act yaml-lint yaml-format
 
 # デフォルトターゲット
 help:
@@ -16,11 +16,6 @@ help:
 	@echo "  act         - Run GitHub Actions locally"
 	@echo "  yaml-lint   - Validate YAML files"
 	@echo "  yaml-format - Format YAML files"
-	@echo "  tf-init     - Initialize Terraform"
-	@echo "  tf-plan     - Plan Terraform changes"
-	@echo "  tf-apply    - Apply Terraform changes"
-	@echo "  tf-destroy  - Destroy Terraform resources"
-	@echo "  tf-env      - Set Terraform environment variables"
 
 # セットアップ
 setup:
@@ -109,24 +104,4 @@ yaml-lint:
 # YAML フォーマット
 yaml-format:
 	@echo "Formatting YAML files..."
-	prettier --write '.github/workflows/*.yml'# T
-erraform コマンド
-tf-init:
-	@echo "Initializing Terraform..."
-	cd terraform/environments/prod && terraform init
-
-tf-plan:
-	@echo "Planning Terraform changes..."
-	cd terraform/environments/prod && terraform plan
-
-tf-apply:
-	@echo "Applying Terraform changes..."
-	cd terraform/environments/prod && terraform apply
-
-tf-destroy:
-	@echo "Destroying Terraform resources..."
-	cd terraform/environments/prod && terraform destroy
-
-tf-env:
-	@echo "Setting Terraform environment variables..."
-	@echo "Run: source ./terraform/scripts/set-env-vars.sh"
+	prettier --write '.github/workflows/*.yml'

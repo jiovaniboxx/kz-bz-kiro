@@ -46,7 +46,7 @@ export function useEventEmitter() {
     },
     emitNavigation: (path: string) => {
       eventBus.emit('NAVIGATION', { path });
-    },
+    }
   };
 }
 

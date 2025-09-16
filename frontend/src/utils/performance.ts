@@ -31,31 +31,31 @@ export class PerformanceMonitor {
 
     // Largest Contentful Paint (LCP)
     this.observeLCP();
-
+    
     // First Input Delay (FID)
     this.observeFID();
-
+    
     // Cumulative Layout Shift (CLS)
     this.observeCLS();
-
+    
     // First Contentful Paint (FCP)
     this.observeFCP();
-
+    
     // Time to First Byte (TTFB)
     this.observeTTFB();
   }
 
   private static observeLCP(): void {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver(list => {
+      const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1] as any;
-
+        
         if (lastEntry) {
           this.recordMetric('LCP', lastEntry.startTime);
         }
       });
-
+      
       observer.observe({ entryTypes: ['largest-contentful-paint'] });
       this.observers.push(observer);
     }
@@ -63,7 +63,7 @@ export class PerformanceMonitor {
 
   private static observeFID(): void {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver(list => {
+      const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry: any) => {
           if (entry.processingStart && entry.startTime) {
@@ -72,7 +72,7 @@ export class PerformanceMonitor {
           }
         });
       });
-
+      
       observer.observe({ entryTypes: ['first-input'] });
       this.observers.push(observer);
     }
@@ -81,18 +81,18 @@ export class PerformanceMonitor {
   private static observeCLS(): void {
     if ('PerformanceObserver' in window) {
       let clsValue = 0;
-
-      const observer = new PerformanceObserver(list => {
+      
+      const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry: any) => {
           if (!entry.hadRecentInput) {
             clsValue += entry.value;
           }
         });
-
+        
         this.recordMetric('CLS', clsValue);
       });
-
+      
       observer.observe({ entryTypes: ['layout-shift'] });
       this.observers.push(observer);
     }
@@ -100,7 +100,7 @@ export class PerformanceMonitor {
 
   private static observeFCP(): void {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver(list => {
+      const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry: any) => {
           if (entry.name === 'first-contentful-paint') {
@@ -108,7 +108,7 @@ export class PerformanceMonitor {
           }
         });
       });
-
+      
       observer.observe({ entryTypes: ['paint'] });
       this.observers.push(observer);
     }
@@ -116,24 +116,17 @@ export class PerformanceMonitor {
 
   private static observeTTFB(): void {
     if ('performance' in window && 'getEntriesByType' in performance) {
-      const navigationEntries = performance.getEntriesByType(
-        'navigation'
-      ) as PerformanceNavigationTiming[];
+      const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
       if (navigationEntries.length > 0) {
-        const ttfb =
-          navigationEntries[0].responseStart -
-          navigationEntries[0].requestStart;
+        const ttfb = navigationEntries[0].responseStart - navigationEntries[0].requestStart;
         this.recordMetric('TTFB', ttfb);
       }
     }
   }
 
-  private static recordMetric(
-    name: keyof typeof this.thresholds,
-    value: number
-  ): void {
+  private static recordMetric(name: keyof typeof this.thresholds, value: number): void {
     this.metrics.set(name, value);
-
+    
     const rating = this.getRating(name, value);
     const metric: WebVitalsMetric = {
       name,
@@ -145,17 +138,14 @@ export class PerformanceMonitor {
 
     // Google Analytics に送信
     this.sendToAnalytics(metric);
-
+    
     // コンソールに出力（開発環境のみ）
     if (process.env.NODE_ENV === 'development') {
       console.log(`${name}: ${value.toFixed(2)} (${rating})`);
     }
   }
 
-  private static getRating(
-    name: keyof typeof this.thresholds,
-    value: number
-  ): 'good' | 'needs-improvement' | 'poor' {
+  private static getRating(name: keyof typeof this.thresholds, value: number): 'good' | 'needs-improvement' | 'poor' {
     const threshold = this.thresholds[name];
     if (value <= threshold.good) return 'good';
     if (value <= threshold.poor) return 'needs-improvement';
@@ -192,12 +182,10 @@ export class ResourceMonitor {
     if (typeof window === 'undefined') return;
 
     window.addEventListener('load', () => {
-      const resources = performance.getEntriesByType(
-        'resource'
-      ) as PerformanceResourceTiming[];
-
-      const slowResources = resources.filter(
-        resource => resource.duration > 1000 // 1秒以上かかったリソース
+      const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+      
+      const slowResources = resources.filter(resource => 
+        resource.duration > 1000 // 1秒以上かかったリソース
       );
 
       if (slowResources.length > 0 && process.env.NODE_ENV === 'development') {
@@ -205,13 +193,12 @@ export class ResourceMonitor {
       }
 
       // 画像の読み込み時間を測定
-      const images = resources.filter(
-        resource => resource.initiatorType === 'img'
+      const images = resources.filter(resource => 
+        resource.initiatorType === 'img'
       );
 
-      const avgImageLoadTime =
-        images.reduce((sum, img) => sum + img.duration, 0) / images.length;
-
+      const avgImageLoadTime = images.reduce((sum, img) => sum + img.duration, 0) / images.length;
+      
       if (window.gtag) {
         window.gtag('event', 'resource_timing', {
           event_category: 'Performance',
@@ -229,7 +216,7 @@ export class MemoryMonitor {
     if (typeof window === 'undefined' || !('memory' in performance)) return;
 
     const memory = (performance as any).memory;
-
+    
     const memoryInfo = {
       usedJSHeapSize: memory.usedJSHeapSize,
       totalJSHeapSize: memory.totalJSHeapSize,
@@ -240,7 +227,7 @@ export class MemoryMonitor {
     const usageRatio = memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit;
     if (usageRatio > 0.8) {
       console.warn('High memory usage detected:', memoryInfo);
-
+      
       if (window.gtag) {
         window.gtag('event', 'high_memory_usage', {
           event_category: 'Performance',
@@ -269,25 +256,19 @@ export class PerformanceOptimizer {
     // LCP が遅い場合
     const lcp = metrics.get('LCP');
     if (lcp && lcp > 2500) {
-      suggestions.push(
-        'LCP improvement: Consider optimizing images and reducing server response time'
-      );
+      suggestions.push('LCP improvement: Consider optimizing images and reducing server response time');
     }
 
     // FID が遅い場合
     const fid = metrics.get('FID');
     if (fid && fid > 100) {
-      suggestions.push(
-        'FID improvement: Consider reducing JavaScript execution time'
-      );
+      suggestions.push('FID improvement: Consider reducing JavaScript execution time');
     }
 
     // CLS が高い場合
     const cls = metrics.get('CLS');
     if (cls && cls > 0.1) {
-      suggestions.push(
-        'CLS improvement: Ensure images and ads have dimensions specified'
-      );
+      suggestions.push('CLS improvement: Ensure images and ads have dimensions specified');
     }
 
     if (suggestions.length > 0 && process.env.NODE_ENV === 'development') {
@@ -305,7 +286,7 @@ if (typeof window !== 'undefined') {
     PerformanceMonitor.init();
     ResourceMonitor.measureResourceTiming();
     MemoryMonitor.startMonitoring();
-
+    
     // 5秒後に分析と提案を実行
     setTimeout(() => {
       PerformanceOptimizer.analyzeAndSuggest();

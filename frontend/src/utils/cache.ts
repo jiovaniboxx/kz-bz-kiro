@@ -55,11 +55,11 @@ export class BrowserCache {
   // 期限切れのキャッシュを削除
   cleanup(): void {
     const now = Date.now();
-    Array.from(this.cache.entries()).forEach(([key, cached]) => {
+    for (const [key, cached] of this.cache.entries()) {
       if (now - cached.timestamp > cached.ttl) {
         this.cache.delete(key);
       }
-    });
+    }
   }
 }
 
@@ -156,7 +156,7 @@ export class APICache {
     ttlMinutes: number = 15
   ): Promise<T> {
     const cacheKey = `api_${url}_${JSON.stringify(options)}`;
-
+    
     // キャッシュから取得を試行
     const cached = this.cache.get(cacheKey);
     if (cached) {
@@ -169,12 +169,12 @@ export class APICache {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      
       const data = await response.json();
-
+      
       // キャッシュに保存
       this.cache.set(cacheKey, data, ttlMinutes);
-
+      
       return data;
     } catch (error) {
       console.error('API fetch error:', error);
@@ -251,11 +251,8 @@ if (typeof window !== 'undefined') {
   });
 
   // 定期的なクリーンアップ（30分ごと）
-  setInterval(
-    () => {
-      PersistentCache.cleanup();
-      BrowserCache.getInstance().cleanup();
-    },
-    30 * 60 * 1000
-  );
+  setInterval(() => {
+    PersistentCache.cleanup();
+    BrowserCache.getInstance().cleanup();
+  }, 30 * 60 * 1000);
 }

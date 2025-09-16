@@ -67,7 +67,7 @@ const Footer = () => {
                 </p>
               </div>
               <div className="flex space-x-6">
-                {navigation.social.map(item => (
+                {navigation.social.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
@@ -87,7 +87,7 @@ const Footer = () => {
                   ナビゲーション
                 </h3>
                 <ul className="mt-4 space-y-4">
-                  {navigation.main.map(item => (
+                  {navigation.main.map((item) => (
                     <li key={item.name}>
                       <Link
                         href={item.href}
@@ -107,26 +107,21 @@ const Footer = () => {
                 <div className="mt-4 space-y-4">
                   <div>
                     <p className="text-base text-gray-300">
-                      〒150-0001
-                      <br />
-                      東京都渋谷区神宮前1-2-3
-                      <br />
+                      〒150-0001<br />
+                      東京都渋谷区神宮前1-2-3<br />
                       英会話カフェビル 2F
                     </p>
                   </div>
                   <div>
                     <p className="text-base text-gray-300">
-                      TEL: 03-1234-5678
-                      <br />
+                      TEL: 03-1234-5678<br />
                       Email: info@english-cafe.com
                     </p>
                   </div>
                   <div>
                     <p className="text-base text-gray-300">
-                      営業時間:
-                      <br />
-                      平日 10:00-22:00
-                      <br />
+                      営業時間:<br />
+                      平日 10:00-22:00<br />
                       土日祝 10:00-20:00
                     </p>
                   </div>

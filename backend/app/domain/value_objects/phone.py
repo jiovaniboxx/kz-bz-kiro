@@ -27,9 +27,6 @@ class Phone:
         # 正規化
         normalized = self._normalize_phone(self.value)
         
-        if not normalized:
-            raise ValueError("電話番号は必須です")
-        
         if not self._is_valid_phone(normalized):
             raise ValueError(f"無効な電話番号形式です: {self.value}")
         
@@ -47,7 +44,7 @@ class Phone:
             str: 正規化された電話番号
         """
         # 空白、ハイフン、括弧を除去
-        normalized = re.sub(r'[\s\-\(\)]', '', phone.strip())
+        normalized = re.sub(r'[\s\-\(\)]', '', phone)
         
         # 先頭の+81を0に変換（日本の国際番号）
         if normalized.startswith('+81'):
