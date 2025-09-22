@@ -234,13 +234,16 @@ export function SNSLinksSection({
                                         <h4 className="font-semibold text-gray-900">Twitter</h4>
                                         <p className="text-sm text-gray-600">英語学習のコツを毎日ツイート</p>
                                     </div>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleSNSClick('Twitter', snsConfig.twitterUrl ?? '')}
-                                    >
-                                        フォロー
-                                    </Button>
+                                    {snsConfig.twitterUrl && (
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleSNSClick('Twitter', snsConfig.twitterUrl!)}
+                                        >
+                                            フォロー
+                                        </Button>
+                                    )}
+
                                 </div>
                             </Card>
                         )}
