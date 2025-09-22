@@ -117,7 +117,7 @@
   left: -1px;
   width: 1px;
   height: 1px;
-  background: url(attr(data-preload-src url));
+  background: transparent;
   opacity: 0;
   pointer-events: none;
 }

@@ -106,7 +106,6 @@ venv/
 env/
 .venv/
 
-
 # コンパイルされたPythonファイル
 *.pyc
 __pycache__/

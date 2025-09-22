@@ -3,14 +3,19 @@
  * 構造化データ（JSON-LD）を埋め込むためのコンポーネント
  */
 
-import { StructuredData as StructuredDataUtil } from '@/utils/metadata';
-
 interface StructuredDataProps {
   data: object;
 }
 
 export function StructuredData({ data }: StructuredDataProps) {
-  return <StructuredDataUtil data={data} />;
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data, null, 2),
+      }}
+    />
+  );
 }
 
 // 講師用構造化データ

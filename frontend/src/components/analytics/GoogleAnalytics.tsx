@@ -19,10 +19,22 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
+        id="gtag-script"
+      >
+        {`
+          (function() {
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=${measurementId}';
+            document.head.appendChild(script);
+          })();
+        `}
+      </Script>
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+      >
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
