@@ -5,9 +5,10 @@ interface CardProps {
   children: ReactNode;
   className?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  style?: React.CSSProperties;
 }
 
-const Card = ({ children, className, padding = 'md' }: CardProps) => {
+const Card = ({ children, className, padding = 'md', style }: CardProps) => {
   const paddingClasses = {
     none: '',
     sm: 'p-4',
@@ -22,6 +23,7 @@ const Card = ({ children, className, padding = 'md' }: CardProps) => {
         paddingClasses[padding],
         className
       )}
+      style={style}
     >
       {children}
     </div>

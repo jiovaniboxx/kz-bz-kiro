@@ -100,3 +100,16 @@ backups/
 # Temporary files
 tmp/
 temp/
+
+# 仮想環境ディレクトリ
+venv/
+env/
+.venv/
+
+# コンパイルされたPythonファイル
+*.pyc
+__pycache__/
+
+# その他の自動生成ファイル
+*.py[cod]
+*$py.class
