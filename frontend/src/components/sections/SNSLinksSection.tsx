@@ -238,11 +238,12 @@ export function SNSLinksSection({
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => handleSNSClick('Twitter', snsConfig.twitterUrl!)}
+                                            onClick={() => handleSNSClick('Twitter', snsConfig.twitterUrl)}
                                         >
                                             フォロー
                                         </Button>
                                     )}
+
 
                                 </div>
                             </Card>
