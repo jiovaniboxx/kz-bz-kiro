@@ -2,7 +2,28 @@
 const nextConfig = {
   // 画像最適化設定
   images: {
-    domains: ['localhost', 'youtube.com', 'img.youtube.com', 'images.unsplash.com'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'youtube.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -13,7 +34,7 @@ const nextConfig = {
   
   // 実験的機能の有効化
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // Docker環境では無効化
     optimizePackageImports: ['@heroicons/react', 'lucide-react'],
     turbo: {
       rules: {

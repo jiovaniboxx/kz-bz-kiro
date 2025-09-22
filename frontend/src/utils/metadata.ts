@@ -4,9 +4,6 @@
  */
 
 import { Metadata } from 'next';
-import { type } from 'os';
-import { type } from 'os';
-import { type } from 'os';
 
 // サイト基本情報
 export const SITE_CONFIG = {
@@ -249,14 +246,7 @@ export const generateLessonMetadata = (
   );
 };
 
-// 構造化データをHTMLに埋め込むためのコンポーネント
-export function StructuredData({ data }: { data: object }) {
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(data, null, 2),
-      }}
-    />
-  );
+// 構造化データをJSON文字列として生成する関数
+export function generateStructuredDataScript(data: object): string {
+  return JSON.stringify(data, null, 2);
 }

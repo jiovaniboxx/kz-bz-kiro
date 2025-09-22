@@ -5,7 +5,8 @@ import Layout from '@/components/layout/Layout';
 import { EventProvider } from '@/providers/EventProvider';
 import { PerformanceProvider } from '@/providers/PerformanceProvider';
 import { ToastContainer } from '@/components/ui/Toast';
-import { generatePageMetadata, StructuredData, generateOrganizationSchema, generateLocalBusinessSchema } from '@/utils/metadata';
+import { generatePageMetadata, generateOrganizationSchema, generateLocalBusinessSchema } from '@/utils/metadata';
+import { StructuredData } from '@/components/seo/StructuredData';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 
 const inter = Inter({ 
