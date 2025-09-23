@@ -65,11 +65,12 @@ export default function DebugPage() {
       const response = await contactApi.submit(testData);
       setApiResponse(response);
       
-      if (response.success) {
+      if ('success' in response && response.success) {
         setHealthStatus('✅ 問い合わせ送信テスト成功');
       } else {
         setHealthStatus(`❌ 問い合わせ送信テスト失敗: ${response.error}`);
       }
+      
     } catch (error: any) {
       setHealthStatus(`❌ 問い合わせ送信エラー: ${error.message}`);
       setApiResponse({ error: error.message });
