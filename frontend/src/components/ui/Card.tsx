@@ -6,9 +6,10 @@ interface CardProps {
   className?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg';
   style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
-const Card = ({ children, className, padding = 'md', style }: CardProps) => {
+const Card = ({ children, className, padding = 'md', style, onClick }: CardProps) => {
   const paddingClasses = {
     none: '',
     sm: 'p-4',
@@ -21,9 +22,11 @@ const Card = ({ children, className, padding = 'md', style }: CardProps) => {
       className={cn(
         'rounded-lg border border-gray-200 bg-white shadow-sm',
         paddingClasses[padding],
-        className
+        className,
+        onClick && 'cursor-pointer'
       )}
       style={style}
+      onClick={onClick}
     >
       {children}
     </div>

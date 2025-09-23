@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Container, Card, Button, Badge, Modal } from '@/components/ui';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 interface SNSConfig {
     lineId: string;
@@ -39,7 +39,6 @@ export function SNSLinksSection({
     showQRCode = true
 }: SNSLinksSectionProps) {
     const [showLineQR, setShowLineQR] = useState(false);
-    const [qrCodeLoaded, setQrCodeLoaded] = useState(false);
 
     // LINE QRコードURL生成
     const generateLineQRCode = (size: number = 200) => {
@@ -234,15 +233,13 @@ export function SNSLinksSection({
                                         <h4 className="font-semibold text-gray-900">Twitter</h4>
                                         <p className="text-sm text-gray-600">英語学習のコツを毎日ツイート</p>
                                     </div>
-                                    {snsConfig.twitterUrl && (
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => handleSNSClick('Twitter', snsConfig.twitterUrl)}
-                                        >
-                                            フォロー
-                                        </Button>
-                                    )}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => snsConfig.twitterUrl && handleSNSClick('Twitter', snsConfig.twitterUrl)}
+                                    >
+                                        フォロー
+                                    </Button>
 
 
                                 </div>
@@ -265,7 +262,7 @@ export function SNSLinksSection({
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => handleSNSClick('YouTube', snsConfig.youtubeUrl)}
+                                        onClick={() => snsConfig.youtubeUrl && handleSNSClick('YouTube', snsConfig.youtubeUrl)}
                                     >
                                         チャンネル登録
                                     </Button>
@@ -305,7 +302,6 @@ export function SNSLinksSection({
                             width={200}
                             height={200}
                             className="mx-auto"
-                            onLoad={() => setQrCodeLoaded(true)}
                         />
                     </div>
 

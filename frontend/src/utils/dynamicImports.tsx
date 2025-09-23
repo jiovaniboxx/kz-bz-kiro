@@ -110,7 +110,7 @@ export const DynamicVideoCard = dynamic(
 export function createDynamicComponent<P extends object>(
   importFn: () => Promise<{ default: ComponentType<P> }>,
   options: {
-    loading?: ComponentType;
+    loading?: () => JSX.Element;
     ssr?: boolean;
   } = {}
 ) {

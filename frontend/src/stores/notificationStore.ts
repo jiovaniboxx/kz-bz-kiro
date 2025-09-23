@@ -51,7 +51,7 @@ export const useNotificationStore = create<NotificationState>()(
         }));
 
         // 自動削除（duration > 0の場合）
-        if (newNotification.duration > 0) {
+        if (newNotification.duration && newNotification.duration > 0) {
           setTimeout(() => {
             get().removeNotification(id);
           }, newNotification.duration);

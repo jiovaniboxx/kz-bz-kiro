@@ -4,7 +4,7 @@
  */
 
 import { forwardRef } from 'react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -12,6 +12,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   helperText?: string;
   variant?: 'default' | 'filled';
   inputSize?: 'sm' | 'md' | 'lg';
+  icon?: React.ReactNode;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -23,6 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     helperText, 
     variant = 'default',
     inputSize = 'md',
+    icon,
     id,
     ...props 
   }, ref) => {
@@ -51,20 +53,28 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
         
-        <input
-          id={inputId}
-          type={type}
-          className={cn(
-            'w-full rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
-            sizeClasses[inputSize],
-            variantClasses[variant],
-            error && 'border-red-300 focus:border-red-500 focus:ring-red-500',
-            props.disabled && 'bg-gray-50 text-gray-500 cursor-not-allowed',
-            className
+        <div className="relative">
+          {icon && (
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              {icon}
+            </div>
           )}
-          ref={ref}
-          {...props}
-        />
+          <input
+            id={inputId}
+            type={type}
+            className={cn(
+              'w-full rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+              sizeClasses[inputSize],
+              variantClasses[variant],
+              error && 'border-red-300 focus:border-red-500 focus:ring-red-500',
+              props.disabled && 'bg-gray-50 text-gray-500 cursor-not-allowed',
+              icon && 'pl-10',
+              className
+            )}
+            ref={ref}
+            {...props}
+          />
+        </div>
         
         {error && (
           <p className="mt-2 text-sm text-red-600 flex items-center">

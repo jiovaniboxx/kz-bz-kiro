@@ -6,13 +6,14 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { VideoContent, VideoSection, VIDEO_CATEGORIES } from '@/types/video';
+import { VideoContent, VIDEO_CATEGORIES } from '@/types/video';
+import type { VideoSection } from '@/types/video';
 import { VideoCard, VideoCardSkeleton } from '@/components/ui/VideoCard';
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 interface VideoGalleryProps {
   sections: VideoSection[];

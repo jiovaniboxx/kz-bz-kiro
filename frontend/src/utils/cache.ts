@@ -55,7 +55,8 @@ export class BrowserCache {
   // 期限切れのキャッシュを削除
   cleanup(): void {
     const now = Date.now();
-    for (const [key, cached] of this.cache.entries()) {
+    const entries = Array.from(this.cache.entries());
+    for (const [key, cached] of entries) {
       if (now - cached.timestamp > cached.ttl) {
         this.cache.delete(key);
       }
