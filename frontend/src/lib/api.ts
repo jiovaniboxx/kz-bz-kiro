@@ -210,7 +210,12 @@ export const contactApi = {
           preferred_contact: contactData.preferredContact,
           message: contactData.message
         });
-        return response.data;
+        return {
+          success: response.success,
+          message: response.message,
+          id: response.data.id,
+          timestamp: response.data.createdAt
+        };
       }
       
       // フィールド名をバックエンド形式に変換

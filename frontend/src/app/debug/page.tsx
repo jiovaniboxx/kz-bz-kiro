@@ -9,10 +9,19 @@ import { useState } from 'react';
 import { Button, Card } from '@/components/ui';
 import { contactApi } from '@/lib/api';
 
+interface ApiResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+  data?: any;
+  id?: string;
+  timestamp?: string;
+}
+
 export default function DebugPage() {
   const [healthStatus, setHealthStatus] = useState<string>('');
   const [isChecking, setIsChecking] = useState(false);
-  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
 
   // 本番環境では表示しない
   if (process.env.NODE_ENV === 'production') {
@@ -34,15 +43,15 @@ export default function DebugPage() {
     try {
       const response = await contactApi.healthCheck();
       setApiResponse(response);
-      
+
       if (response.success) {
         setHealthStatus('✅ API接続正常');
       } else {
-        setHealthStatus(`❌ API接続エラー: ${response.error}`);
+        setHealthStatus(`❌ API接続エラー: ${response.error || '不明なエラー'}`);
       }
     } catch (error: any) {
       setHealthStatus(`❌ ネットワークエラー: ${error.message}`);
-      setApiResponse({ error: error.message });
+      setApiResponse({ success: false, error: error.message });
     } finally {
       setIsChecking(false);
     }
@@ -64,16 +73,16 @@ export default function DebugPage() {
 
       const response = await contactApi.submit(testData);
       setApiResponse(response);
-      
-      if ('success' in response && response.success) {
+
+      if (response.success) {
         setHealthStatus('✅ 問い合わせ送信テスト成功');
       } else {
-        setHealthStatus(`❌ 問い合わせ送信テスト失敗: ${response.error}`);
+        setHealthStatus(`❌ 問い合わせ送信テスト失敗: ${response.error || '不明なエラー'}`);
       }
-      
+
     } catch (error: any) {
       setHealthStatus(`❌ 問い合わせ送信エラー: ${error.message}`);
-      setApiResponse({ error: error.message });
+      setApiResponse({ success: false, error: error.message });
     } finally {
       setIsChecking(false);
     }
@@ -93,17 +102,17 @@ export default function DebugPage() {
           {/* API Health Check */}
           <Card className="p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">API接続テスト</h2>
-            
+
             <div className="space-y-4">
               <div className="flex gap-4">
-                <Button 
+                <Button
                   onClick={handleHealthCheck}
                   disabled={isChecking}
                 >
                   {isChecking ? '確認中...' : 'ヘルスチェック'}
                 </Button>
-                
-                <Button 
+
+                <Button
                   onClick={testContactSubmission}
                   disabled={isChecking}
                   variant="secondary"
@@ -180,7 +189,7 @@ export default function DebugPage() {
                   <li>ファイアウォールやプロキシの設定を確認</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-medium text-gray-800">ネットワークエラーの場合:</h3>
                 <ul className="list-disc list-inside text-gray-600 mt-1 space-y-1">
