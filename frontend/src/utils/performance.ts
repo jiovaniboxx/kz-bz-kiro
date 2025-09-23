@@ -31,16 +31,16 @@ export class PerformanceMonitor {
 
     // Largest Contentful Paint (LCP)
     this.observeLCP();
-    
+
     // First Input Delay (FID)
     this.observeFID();
-    
+
     // Cumulative Layout Shift (CLS)
     this.observeCLS();
-    
+
     // First Contentful Paint (FCP)
     this.observeFCP();
-    
+
     // Time to First Byte (TTFB)
     this.observeTTFB();
   }
@@ -50,12 +50,12 @@ export class PerformanceMonitor {
       const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1] as any;
-        
+
         if (lastEntry) {
           this.recordMetric('LCP', lastEntry.startTime);
         }
       });
-      
+
       observer.observe({ entryTypes: ['largest-contentful-paint'] });
       this.observers.push(observer);
     }
@@ -72,7 +72,7 @@ export class PerformanceMonitor {
           }
         });
       });
-      
+
       observer.observe({ entryTypes: ['first-input'] });
       this.observers.push(observer);
     }
@@ -81,7 +81,7 @@ export class PerformanceMonitor {
   private static observeCLS(): void {
     if ('PerformanceObserver' in window) {
       let clsValue = 0;
-      
+
       const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry: any) => {
@@ -89,10 +89,10 @@ export class PerformanceMonitor {
             clsValue += entry.value;
           }
         });
-        
+
         this.recordMetric('CLS', clsValue);
       });
-      
+
       observer.observe({ entryTypes: ['layout-shift'] });
       this.observers.push(observer);
     }
@@ -108,7 +108,7 @@ export class PerformanceMonitor {
           }
         });
       });
-      
+
       observer.observe({ entryTypes: ['paint'] });
       this.observers.push(observer);
     }
@@ -126,7 +126,7 @@ export class PerformanceMonitor {
 
   private static recordMetric(name: keyof typeof this.thresholds, value: number): void {
     this.metrics.set(name, value);
-    
+
     const rating = this.getRating(name, value);
     const metric: WebVitalsMetric = {
       name,
@@ -138,7 +138,7 @@ export class PerformanceMonitor {
 
     // Google Analytics に送信
     this.sendToAnalytics(metric);
-    
+
     // コンソールに出力（開発環境のみ）
     if (process.env.NODE_ENV === 'development') {
       console.log(`${name}: ${value.toFixed(2)} (${rating})`);
@@ -183,8 +183,8 @@ export class ResourceMonitor {
 
     window.addEventListener('load', () => {
       const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
-      
-      const slowResources = resources.filter(resource => 
+
+      const slowResources = resources.filter(resource =>
         resource.duration > 1000 // 1秒以上かかったリソース
       );
 
@@ -193,12 +193,12 @@ export class ResourceMonitor {
       }
 
       // 画像の読み込み時間を測定
-      const images = resources.filter(resource => 
+      const images = resources.filter(resource =>
         resource.initiatorType === 'img'
       );
 
       const avgImageLoadTime = images.reduce((sum, img) => sum + img.duration, 0) / images.length;
-      
+
       if (window.gtag) {
         window.gtag('event', 'resource_timing', {
           event_category: 'Performance',
@@ -216,7 +216,7 @@ export class MemoryMonitor {
     if (typeof window === 'undefined' || !('memory' in performance)) return;
 
     const memory = (performance as any).memory;
-    
+
     const memoryInfo = {
       usedJSHeapSize: memory.usedJSHeapSize,
       totalJSHeapSize: memory.totalJSHeapSize,
@@ -227,7 +227,7 @@ export class MemoryMonitor {
     const usageRatio = memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit;
     if (usageRatio > 0.8) {
       console.warn('High memory usage detected:', memoryInfo);
-      
+
       if (window.gtag) {
         window.gtag('event', 'high_memory_usage', {
           event_category: 'Performance',
@@ -286,7 +286,7 @@ if (typeof window !== 'undefined') {
     PerformanceMonitor.init();
     ResourceMonitor.measureResourceTiming();
     MemoryMonitor.startMonitoring();
-    
+
     // 5秒後に分析と提案を実行
     setTimeout(() => {
       PerformanceOptimizer.analyzeAndSuggest();

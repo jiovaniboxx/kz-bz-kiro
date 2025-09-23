@@ -14,7 +14,7 @@ const teachers = [
     name: 'Sarah Johnson',
     nameJapanese: 'サラ・ジョンソン',
     nationality: 'アメリカ',
-    photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     specialization: ['日常英会話', 'ビジネス英語', 'TOEIC対策'],
     experience: '8年',
     introduction: 'こんにちは！アメリカ出身のサラです。日本に住んで5年になります。皆さんが楽しく英語を学べるよう、一人ひとりに合わせたレッスンを心がけています。大学では言語学を専攻し、卒業後は企業での英語研修も担当していました。',

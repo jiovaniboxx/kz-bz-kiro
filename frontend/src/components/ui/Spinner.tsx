@@ -3,7 +3,7 @@
  * ローディング状態を表示するスピナーコンポーネント
  */
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';

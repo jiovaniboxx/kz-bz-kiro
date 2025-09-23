@@ -46,14 +46,28 @@ app = FastAPI(
 # CORS設定
 from .config import get_settings
 settings = get_settings()
-origins = settings.cors_origins.split(",") if "," in settings.cors_origins else [settings.cors_origins]
 
+# 開発環境用のCORS設定
+allowed_origins = [
+    "http://localhost:3000",  # フロントエンド開発サーバー
+    "http://127.0.0.1:3000",  # 代替ローカルホスト
+    "https://localhost:3000", # HTTPS版
+]
+
+# 環境変数からの追加オリジン
+if settings.cors_origins:
+    additional_origins = settings.cors_origins.split(",")
+    allowed_origins.extend([origin.strip() for origin in additional_origins])
+
+# より寛容なCORS設定でデバッグ
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=["*"],  # 開発環境では全てのオリジンを許可
+    allow_credentials=False,  # 全オリジン許可時はcredentialsをFalseにする
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
 
 
@@ -76,6 +90,21 @@ async def root():
             "message": "英会話カフェ API",
             "version": "1.0.0",
             "docs": "/docs",
+        }
+    )
+
+
+# グローバルOPTIONSハンドラー
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    """全てのパスに対するOPTIONSリクエストハンドラー"""
+    return JSONResponse(
+        content={"message": "OK"},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "3600",
         }
     )
 

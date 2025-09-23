@@ -6,10 +6,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useContactStore } from '@/stores/contactStore';
 import { useNotificationStore } from '@/stores/notificationStore';
 import { Input, Textarea, Select, Button, Spinner } from '@/components/ui';
-import { cn } from '@/utils/cn';
+import { contactApi } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 interface ContactFormData {
   name: string;
@@ -54,9 +54,10 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ className, onSuccess }: ContactFormProps) {
-  const { isSubmitting, error, submitContact } = useContactStore();
   const { addNotification } = useNotificationStore();
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -65,7 +66,7 @@ export function ContactForm({ className, onSuccess }: ContactFormProps) {
     preferredContact: 'email',
     message: ''
   });
-  
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -77,33 +78,33 @@ export function ContactForm({ className, onSuccess }: ContactFormProps) {
         if (!value.trim()) return 'お名前は必須です';
         if (value.trim().length < 2) return 'お名前は2文字以上で入力してください';
         return undefined;
-        
+
       case 'email':
         if (!value.trim()) return 'メールアドレスは必須です';
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) return '有効なメールアドレスを入力してください';
         return undefined;
-        
+
       case 'phone':
         if (value && !/^[\d\-\(\)\+\s]+$/.test(value)) {
           return '有効な電話番号を入力してください';
         }
         return undefined;
-        
+
       case 'lessonType':
         if (!value) return 'レッスンタイプを選択してください';
         return undefined;
-        
+
       case 'preferredContact':
         if (!value) return '希望連絡方法を選択してください';
         return undefined;
-        
+
       case 'message':
         if (!value.trim()) return 'メッセージは必須です';
         if (value.trim().length < 10) return 'メッセージは10文字以上で入力してください';
         if (value.trim().length > 1000) return 'メッセージは1000文字以内で入力してください';
         return undefined;
-        
+
       default:
         return undefined;
     }
@@ -112,21 +113,21 @@ export function ContactForm({ className, onSuccess }: ContactFormProps) {
   // フォーム全体のバリデーション
   const validateForm = (data: ContactFormData): FormErrors => {
     const newErrors: FormErrors = {};
-    
+
     Object.keys(data).forEach(key => {
       const error = validateField(key, data[key as keyof ContactFormData]);
       if (error) {
         newErrors[key as keyof FormErrors] = error;
       }
     });
-    
+
     return newErrors;
   };
 
   // フィールド値変更ハンドラー
   const handleFieldChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     // リアルタイムバリデーション（フィールドがタッチされている場合のみ）
     if (touched[name]) {
       const error = validateField(name, value);
@@ -146,22 +147,22 @@ export function ContactForm({ className, onSuccess }: ContactFormProps) {
     const formErrors = validateForm(formData);
     const hasErrors = Object.values(formErrors).some(error => error !== undefined);
     const hasRequiredFields = formData.name && formData.email && formData.lessonType && formData.message;
-    
+
     setIsFormValid(!hasErrors && !!hasRequiredFields);
   }, [formData]);
 
   // フォーム送信ハンドラー
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // 全フィールドをタッチ済みにマーク
     const allFields = Object.keys(formData);
     setTouched(allFields.reduce((acc, field) => ({ ...acc, [field]: true }), {}));
-    
+
     // バリデーション
     const formErrors = validateForm(formData);
     setErrors(formErrors);
-    
+
     if (Object.values(formErrors).some(error => error !== undefined)) {
       addNotification({
         type: 'error',
@@ -171,20 +172,31 @@ export function ContactForm({ className, onSuccess }: ContactFormProps) {
       return;
     }
 
+    setIsSubmitting(true);
+    setError(null);
+
     try {
-      await submitContact({
-        ...formData,
-        lessonType: formData.lessonType || undefined,
-        preferredContact: formData.preferredContact
-      } as import('@/domain/contact').ContactFormData);
-      
-      // 成功時の処理
-      addNotification({
-        type: 'success',
-        title: '送信完了',
-        message: 'お問い合わせを受け付けました。確認メールをお送りしましたのでご確認ください。'
+      // バックエンドAPIに送信
+      const response = await contactApi.submit({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        lessonType: formData.lessonType,
+        preferredContact: formData.preferredContact,
+        message: formData.message
       });
-      
+
+      if (response.success) {
+        // 成功時の処理
+        addNotification({
+          type: 'success',
+          title: '送信完了',
+          message: 'お問い合わせを受け付けました。確認メールをお送りしましたのでご確認ください。'
+        });
+      } else {
+        throw new Error(response.error || '送信に失敗しました');
+      }
+
       // フォームリセット
       setFormData({
         name: '',
@@ -196,15 +208,22 @@ export function ContactForm({ className, onSuccess }: ContactFormProps) {
       });
       setErrors({});
       setTouched({});
-      
+
       onSuccess?.();
-      
-    } catch (err) {
+
+    } catch (err: any) {
+      console.error('Contact form submission error:', err);
+
+      const errorMessage = err.message || 'お問い合わせの送信に失敗しました。しばらく時間をおいて再度お試しください。';
+
+      setError(errorMessage);
       addNotification({
         type: 'error',
         title: '送信エラー',
-        message: 'お問い合わせの送信に失敗しました。しばらく時間をおいて再度お試しください。'
+        message: errorMessage
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

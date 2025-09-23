@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 画像最適化設定
+  // 画像最適化設定（開発時は軽量化）
   images: {
+    unoptimized: process.env.NODE_ENV === 'development', // 開発時は最適化を無効化
     remotePatterns: [
       {
         protocol: 'http',
@@ -24,10 +25,10 @@ const nextConfig = {
         hostname: 'upload.wikimedia.org',
       },
     ],
-    formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30日間キャッシュ
+    formats: process.env.NODE_ENV === 'development' ? [] : ['image/webp', 'image/avif'],
+    deviceSizes: process.env.NODE_ENV === 'development' ? [640, 1080, 1920] : [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: process.env.NODE_ENV === 'development' ? [32, 64, 128] : [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: process.env.NODE_ENV === 'development' ? 0 : 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
@@ -36,14 +37,17 @@ const nextConfig = {
   experimental: {
     // optimizeCss: true, // Docker環境では無効化
     optimizePackageImports: ['@heroicons/react', 'lucide-react'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
+    // 開発時のコンパイル最適化
+    webpackBuildWorker: true,
+    // Turboを無効化してリクエスト中断を減らす
+    // turbo: {
+    //   rules: {
+    //     '*.svg': {
+    //       loaders: ['@svgr/webpack'],
+    //       as: '*.js',
+    //     },
+    //   },
+    // },
   },
   
   // コンパイラ最適化
@@ -62,6 +66,25 @@ const nextConfig = {
           openAnalyzer: true,
         })
       );
+    }
+    
+    // 開発時の最適化
+    if (dev) {
+      // 開発時のコンパイル速度向上
+      config.optimization = {
+        ...config.optimization,
+        removeAvailableModules: false,
+        removeEmptyChunks: false,
+        splitChunks: false,
+      };
+      
+      // 開発時のキャッシュ設定
+      config.cache = {
+        type: 'filesystem',
+        buildDependencies: {
+          config: [__filename],
+        },
+      };
     }
     
     // 最適化設定
@@ -106,14 +129,21 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
   },
   
-  // 本番ビルド用の設定
-  output: 'standalone',
+  // 開発サーバーの設定
+  devIndicators: {
+    buildActivity: false, // ビルドインジケーターを無効化
+  },
   
-  // パフォーマンス最適化
-  poweredByHeader: false,
-  generateEtags: true,
-  compress: true,
-  // セキュリティヘッダー
+  // リクエスト処理の最適化
+  onDemandEntries: {
+    maxInactiveAge: 60 * 1000, // 1分
+    pagesBufferLength: 2,
+  },
+  
+  // 開発時のCORS問題を解決
+  allowedDevOrigins: ['0.0.0.0:3000', 'localhost:3000'],
+  
+  // 開発時のCORS設定を追加
   async headers() {
     return [
       {
@@ -143,10 +173,34 @@ const nextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
           },
+          // フォント読み込みのためのCORS設定
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+      // Google Fontsのプリコネクト
+      {
+        source: '/_next/static/css/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
         ],
       },
     ];
   },
+  
+  // 本番ビルド用の設定
+  output: 'standalone',
+  
+  // パフォーマンス最適化
+  poweredByHeader: false,
+  generateEtags: true,
+  compress: true,
+
   async rewrites() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     return [

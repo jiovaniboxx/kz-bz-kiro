@@ -22,13 +22,18 @@ class LessonType(Enum):
     PRIVATE = "private"
     ONLINE = "online"
     TRIAL = "trial"
+    BUSINESS = "business"
+    TOEIC = "toeic"
+    OTHER = "other"
 
 
 class PreferredContact(Enum):
     """希望連絡方法"""
     EMAIL = "email"
     PHONE = "phone"
-    EITHER = "either"
+    LINE = "line"
+    FACEBOOK = "facebook"
+    INSTAGRAM = "instagram"
 
 
 class ContactStatus(Enum):

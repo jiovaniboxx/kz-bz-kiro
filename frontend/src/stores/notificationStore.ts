@@ -5,6 +5,7 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { generateUUID } from '@/utils/uuid';
 
 export interface Notification {
   id: string;
@@ -38,7 +39,7 @@ export const useNotificationStore = create<NotificationState>()(
       notifications: [],
 
       addNotification: (notification) => {
-        const id = crypto.randomUUID();
+        const id = generateUUID();
         const newNotification: Notification = {
           ...notification,
           id,

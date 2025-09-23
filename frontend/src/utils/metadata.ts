@@ -37,7 +37,7 @@ export const generateOrganizationSchema = () => ({
   name: SITE_CONFIG.name,
   description: SITE_CONFIG.description,
   url: SITE_CONFIG.url,
-  logo: `${SITE_CONFIG.url}/logo.png`,
+  logo: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
   image: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
   address: {
     '@type': 'PostalAddress',

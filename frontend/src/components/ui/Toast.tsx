@@ -78,9 +78,9 @@ function Toast({ id, type, title, message, onClose }: ToastProps) {
   return (
     <div
       className={`
-        max-w-sm w-full border rounded-lg shadow-lg p-4 mb-4
+        w-full border rounded-lg shadow-lg p-4 mb-4
         transform transition-all duration-300 ease-in-out
-        ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
+        ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}
         ${getTypeStyles()}
       `}
     >
@@ -125,7 +125,7 @@ export function ToastContainer() {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 space-y-2 px-4 w-full max-w-2xl">
       {notifications.map((notification) => (
         <Toast
           key={notification.id}

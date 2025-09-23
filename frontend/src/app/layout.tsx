@@ -12,11 +12,17 @@ import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 const inter = Inter({ 
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+  preload: false, // プリロードを無効化してリクエスト中断を防ぐ
+  fallback: ['system-ui', 'arial'], // フォールバックを追加
 });
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
   variable: '--font-noto-sans-jp',
+  display: 'swap',
+  preload: false, // プリロードを無効化してリクエスト中断を防ぐ
+  fallback: ['system-ui', 'arial'], // フォールバックを追加
 });
 
 export const metadata: Metadata = generatePageMetadata(

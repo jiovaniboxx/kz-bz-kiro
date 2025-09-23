@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button, Container } from '@/components/ui';
 import { cn } from '@/utils/cn';
+import { RELIABLE_IMAGES } from '@/constants/images';
 
 interface HeroSectionProps {
   className?: string;
@@ -19,17 +20,17 @@ const heroImages = [
   {
     src: '/images/hero/cafe-interior-1.jpg',
     alt: '英会話カフェの温かい雰囲気の店内',
-    fallback: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'
+    fallback: RELIABLE_IMAGES.cafe_atmosphere
   },
   {
     src: '/images/hero/lesson-scene-1.jpg',
     alt: 'ネイティブ講師との楽しいレッスン風景',
-    fallback: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'
+    fallback: RELIABLE_IMAGES.lesson_scene
   },
   {
     src: '/images/hero/students-conversation.jpg',
     alt: '生徒同士の英会話練習',
-    fallback: 'https://images.unsplash.com/photo-1543269664-647b4d4d8d8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'
+    fallback: RELIABLE_IMAGES.students_conversation
   }
 ];
 

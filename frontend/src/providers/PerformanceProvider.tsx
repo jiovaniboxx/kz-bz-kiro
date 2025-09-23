@@ -49,15 +49,14 @@ export function PerformanceProvider({ children }: PerformanceProviderProps) {
       // 重要なコンポーネントのプリロード
       preloadCriticalComponents();
       
-      // 重要な画像のプリロード
-      const criticalImages = [
-        '/images/hero-bg.jpg',
-        '/images/logo.png',
-        '/images/teachers/sarah.jpg',
-        '/images/teachers/james.jpg',
+      // 重要な画像のプリロード（一時的に無効化してリクエスト中断を防ぐ）
+      const criticalImages: string[] = [
+        // 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', // hero_main
+        // 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80', // teacher_female_1
+        // 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80', // teacher_male_1
       ];
       
-      ImageCache.preloadMultiple(criticalImages).catch(console.error);
+      // ImageCache.preloadMultiple(criticalImages).catch(console.error);
       
       // Service Worker の登録（PWA対応）
       if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {

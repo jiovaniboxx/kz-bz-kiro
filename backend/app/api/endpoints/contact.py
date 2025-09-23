@@ -3,6 +3,7 @@ from typing import Annotated
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 import logging
 
 from app.api.schemas.contact import (
@@ -11,17 +12,28 @@ from app.api.schemas.contact import (
     ContactResponse
 )
 from app.services.contact_service import ContactService
-from app.infrastructure.di.container import get_container
+from app.infrastructure.database.connection import get_async_session
+from app.infrastructure.repositories.sqlalchemy_contact_repository import SQLAlchemyContactRepository
+from app.services.email_service import MockEmailService
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/contacts", tags=["contacts"])
 
 
-def get_contact_service() -> ContactService:
+@router.options("/")
+async def contacts_options():
+    """CORS プリフライトリクエスト用のOPTIONSハンドラー"""
+    return {"message": "OK"}
+
+
+async def get_contact_service(
+    session: Annotated[AsyncSession, Depends(get_async_session)]
+) -> ContactService:
     """ContactServiceの依存性注入"""
-    container = get_container()
-    return container.contact_service()
+    contact_repository = SQLAlchemyContactRepository(session)
+    email_service = MockEmailService()
+    return ContactService(contact_repository, email_service)
 
 
 @router.post(

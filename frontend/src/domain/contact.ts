@@ -3,6 +3,8 @@
  * 問い合わせに関するドメインロジックとビジネスルールを定義
  */
 
+import { generateUUID } from '@/utils/uuid';
+
 export interface ContactSubmittedEvent {
   type: 'CONTACT_SUBMITTED';
   payload: {
@@ -76,7 +78,7 @@ export class Contact {
     return {
       type: 'CONTACT_SUBMITTED',
       payload: {
-        contactId: crypto.randomUUID(),
+        contactId: generateUUID(),
         email: this.email,
         submittedAt: new Date()
       }
