@@ -1,11 +1,11 @@
 services:
   - type: web
-    name: kiro-backend
+    name: english-cafe-backend
     env: python
-    buildCommand: "uv sync --frozen"
-    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    buildCommand: "/opt/render/project/poetry/bin/poetry install --no-root"
+    startCommand: "/opt/render/project/poetry/bin/poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000"
     pythonVersion: 3.12
-    useUv: true
+    useUv: false
     autoDeploy: true
-    repo: https://github.com/jiovaniboxx/kz-bz-kiro
+    repo: https://github.com/your-username/your-repo
     branch: main
