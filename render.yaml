@@ -16,8 +16,33 @@ services:
     env: python
     buildCommand: "/opt/render/project/poetry/bin/poetry install --no-root"
     startCommand: "/opt/render/project/poetry/bin/poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000"
-    pythonVersion: 3.12
-    useUv: false
+    # pythonVersion: 3.12
+    # useUv: false
     autoDeploy: true
     repo: https://github.com/your-username/your-repo
     branch: main
+
+
+databases:
+  - name: prod
+    postgresMajorVersion: '17'
+    region: frankfurt
+    plan: basic-4gb
+    databaseName: prod_app
+    user: app_user
+    ipAllowList:
+      - source: 203.0.113.4/30
+        description: office
+      - source: 198.51.100.1
+        description: home
+    readReplicas:
+      - name: prod-replica
+
+  - name: private database
+    databaseName: private
+    ipAllowList: []
+
+  - name: highly available database
+    plan: pro-16gb
+    highAvailability:
+      enabled: true
