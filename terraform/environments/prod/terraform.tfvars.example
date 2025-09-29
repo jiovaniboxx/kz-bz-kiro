@@ -1,3 +1,6 @@
+# prod environment tfvars located at below.
+# https://drive.google.com/drive/folders/1WwvClB0hJuz9mNbTbZFGeXemX7dR5wb8
+
 # Production Environment Configuration Example
 # Copy this file to terraform.tfvars and fill in your actual values
 
