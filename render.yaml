@@ -13,11 +13,9 @@
 services:
   - type: web
     name: english-cafe-backend
-    env: python
-    buildCommand: "/opt/render/project/poetry/bin/poetry install --no-root"
-    startCommand: "/opt/render/project/poetry/bin/poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000"
-    # pythonVersion: 3.12
-    # useUv: false
+    runtime: python
+    buildCommand: "cd backend && pip install -e ."
+    startCommand: "cd backend && python -m app.main"
     autoDeploy: true
     repo: https://github.com/your-username/your-repo
     branch: main

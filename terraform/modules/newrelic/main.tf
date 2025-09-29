@@ -10,21 +10,8 @@ terraform {
   }
 }
 
-# New Relic Application
-resource "newrelic_application" "english_cafe" {
-  name     = var.application_name
-  language = "javascript"
-  
-  app_apdex_threshold      = var.apdex_threshold
-  end_user_apdex_threshold = var.end_user_apdex_threshold
-  enable_real_user_monitoring = true
-  
-  tags = merge(var.common_tags, {
-    Application = var.application_name
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  })
-}
+# Note: New Relic applications are automatically created when the agent reports data
+# No need to explicitly create application resources
 
 # Alert Policy - Performance
 resource "newrelic_alert_policy" "performance" {
@@ -45,75 +32,76 @@ resource "newrelic_alert_policy" "business" {
 }
 
 # Alert Condition - High Error Rate
-resource "newrelic_alert_condition" "high_error_rate" {
-  policy_id = newrelic_alert_policy.errors.id
+resource "newrelic_nrql_alert_condition" "high_error_rate" {
+  policy_id                    = newrelic_alert_policy.errors.id
+  name                        = "High Error Rate"
+  type                        = "static"
+  enabled                     = true
+  violation_time_limit_seconds = 3600
   
-  name        = "High Error Rate"
-  type        = "apm_app_metric"
-  entities    = [newrelic_application.english_cafe.id]
-  metric      = "error_percentage"
-  runbook_url = var.runbook_url
-  
-  term {
-    duration      = 5
-    operator      = "above"
-    priority      = "critical"
-    threshold     = var.alert_thresholds.error_rate
-    time_function = "all"
+  nrql {
+    query = "SELECT percentage(count(*), WHERE response.status >= 400) FROM Transaction WHERE appName = '${var.application_name}'"
   }
   
-  term {
-    duration      = 10
+  critical {
     operator      = "above"
-    priority      = "warning"
+    threshold     = var.alert_thresholds.error_rate
+    threshold_duration = 300
+    threshold_occurrences = "all"
+  }
+  
+  warning {
+    operator      = "above"
     threshold     = var.alert_thresholds.error_rate / 2
-    time_function = "all"
+    threshold_duration = 600
+    threshold_occurrences = "all"
   }
 }
 
 # Alert Condition - Slow Response Time
-resource "newrelic_alert_condition" "slow_response_time" {
-  policy_id = newrelic_alert_policy.performance.id
+resource "newrelic_nrql_alert_condition" "slow_response_time" {
+  policy_id                    = newrelic_alert_policy.performance.id
+  name                        = "Slow Response Time"
+  type                        = "static"
+  enabled                     = true
+  violation_time_limit_seconds = 3600
   
-  name        = "Slow Response Time"
-  type        = "apm_app_metric"
-  entities    = [newrelic_application.english_cafe.id]
-  metric      = "response_time_web"
-  runbook_url = var.runbook_url
-  
-  term {
-    duration      = 5
-    operator      = "above"
-    priority      = "critical"
-    threshold     = var.alert_thresholds.response_time
-    time_function = "all"
+  nrql {
+    query = "SELECT average(duration) FROM Transaction WHERE appName = '${var.application_name}'"
   }
   
-  term {
-    duration      = 10
+  critical {
     operator      = "above"
-    priority      = "warning"
+    threshold     = var.alert_thresholds.response_time
+    threshold_duration = 300
+    threshold_occurrences = "all"
+  }
+  
+  warning {
+    operator      = "above"
     threshold     = var.alert_thresholds.response_time * 0.8
-    time_function = "all"
+    threshold_duration = 600
+    threshold_occurrences = "all"
   }
 }
 
 # Alert Condition - High Memory Usage
-resource "newrelic_alert_condition" "high_memory_usage" {
-  policy_id = newrelic_alert_policy.performance.id
+resource "newrelic_nrql_alert_condition" "high_memory_usage" {
+  policy_id                    = newrelic_alert_policy.performance.id
+  name                        = "High Memory Usage"
+  type                        = "static"
+  enabled                     = true
+  violation_time_limit_seconds = 3600
   
-  name        = "High Memory Usage"
-  type        = "apm_app_metric"
-  entities    = [newrelic_application.english_cafe.id]
-  metric      = "memory_usage"
-  runbook_url = var.runbook_url
+  nrql {
+    query = "SELECT average(memoryUsedPercent) FROM SystemSample WHERE appName = '${var.application_name}'"
+  }
   
-  term {
-    duration      = 10
+  critical {
     operator      = "above"
-    priority      = "critical"
     threshold     = var.alert_thresholds.memory_usage
-    time_function = "all"
+    threshold_duration = 600
+    threshold_occurrences = "all"
   }
 }
 
@@ -217,7 +205,7 @@ resource "newrelic_nrql_alert_condition" "low_lesson_inquiries" {
   violation_time_limit_seconds = 86400
   
   nrql {
-    query = "SELECT count(*) FROM PageAction WHERE actionName = 'lesson_inquiry' SINCE 1 hour ago"
+    query = "SELECT count(*) FROM PageAction WHERE actionName = 'lesson_inquiry'"
   }
   
   critical {
@@ -229,17 +217,18 @@ resource "newrelic_nrql_alert_condition" "low_lesson_inquiries" {
 }
 
 # Notification Channel - Slack
-resource "newrelic_notification_destination" "slack" {
-  count = length(var.notification_channels.slack) > 0 ? 1 : 0
-  
-  name = "${var.application_name}-slack"
-  type = "SLACK"
-  
-  property {
-    key   = "url"
-    value = var.notification_channels.slack
-  }
-}
+# Note: Slack destinations cannot be created via Terraform, must be created manually in New Relic UI
+# resource "newrelic_notification_destination" "slack" {
+#   count = length(var.notification_channels.slack) > 0 ? 1 : 0
+#   
+#   name = "${var.application_name}-slack"
+#   type = "SLACK"
+#   
+#   property {
+#     key   = "url"
+#     value = var.notification_channels.slack
+#   }
+# }
 
 # Notification Channel - Email
 resource "newrelic_notification_destination" "email" {
@@ -255,54 +244,48 @@ resource "newrelic_notification_destination" "email" {
 }
 
 # Workflow - Performance Alerts
-resource "newrelic_workflow" "performance_alerts" {
-  name                  = "${var.application_name}-performance-workflow"
-  muting_rules_handling = "NOTIFY_ALL_ISSUES"
-  
-  issues_filter {
-    name = "performance-filter"
-    type = "FILTER"
-    
-    predicate {
-      attribute = "labels.policyIds"
-      operator  = "EXACTLY_MATCHES"
-      values    = [newrelic_alert_policy.performance.id]
-    }
-  }
-  
-  destination {
-    channel_id = length(newrelic_notification_destination.slack) > 0 ? newrelic_notification_destination.slack[0].id : null
-  }
-  
-  destination {
-    channel_id = length(newrelic_notification_destination.email) > 0 ? newrelic_notification_destination.email[0].id : null
-  }
-}
+# Note: Workflows will be configured manually in New Relic UI due to notification destination limitations
+# resource "newrelic_workflow" "performance_alerts" {
+#   name                  = "${var.application_name}-performance-workflow"
+#   muting_rules_handling = "NOTIFY_ALL_ISSUES"
+#   
+#   issues_filter {
+#     name = "performance-filter"
+#     type = "FILTER"
+#     
+#     predicate {
+#       attribute = "labels.policyIds"
+#       operator  = "EXACTLY_MATCHES"
+#       values    = [newrelic_alert_policy.performance.id]
+#     }
+#   }
+#   
+#   destination {
+#     channel_id = length(newrelic_notification_destination.email) > 0 ? newrelic_notification_destination.email[0].id : null
+#   }
+# }
 
 # Workflow - Error Alerts
-resource "newrelic_workflow" "error_alerts" {
-  name                  = "${var.application_name}-error-workflow"
-  muting_rules_handling = "NOTIFY_ALL_ISSUES"
-  
-  issues_filter {
-    name = "error-filter"
-    type = "FILTER"
-    
-    predicate {
-      attribute = "labels.policyIds"
-      operator  = "EXACTLY_MATCHES"
-      values    = [newrelic_alert_policy.errors.id]
-    }
-  }
-  
-  destination {
-    channel_id = length(newrelic_notification_destination.slack) > 0 ? newrelic_notification_destination.slack[0].id : null
-  }
-  
-  destination {
-    channel_id = length(newrelic_notification_destination.email) > 0 ? newrelic_notification_destination.email[0].id : null
-  }
-}
+# Note: Workflows will be configured manually in New Relic UI due to notification destination limitations
+# resource "newrelic_workflow" "error_alerts" {
+#   name                  = "${var.application_name}-error-workflow"
+#   muting_rules_handling = "NOTIFY_ALL_ISSUES"
+#   
+#   issues_filter {
+#     name = "error-filter"
+#     type = "FILTER"
+#     
+#     predicate {
+#       attribute = "labels.policyIds"
+#       operator  = "EXACTLY_MATCHES"
+#       values    = [newrelic_alert_policy.errors.id]
+#     }
+#   }
+#   
+#   destination {
+#     channel_id = length(newrelic_notification_destination.email) > 0 ? newrelic_notification_destination.email[0].id : null
+#   }
+# }
 
 # Dashboard - Performance Overview
 resource "newrelic_one_dashboard" "performance_overview" {
@@ -439,8 +422,6 @@ resource "newrelic_workload" "english_cafe" {
   name         = var.application_name
   account_id   = var.newrelic_account_id
   description  = "English Cafe Website Workload"
-  
-  entity_guids = [newrelic_application.english_cafe.guid]
   
   entity_search_query {
     query = "name LIKE '${var.application_name}%'"

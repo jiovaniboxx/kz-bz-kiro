@@ -64,8 +64,8 @@ output "alert_rule_group_ids" {
 output "contact_point_ids" {
   description = "Map of contact point names to IDs"
   value = {
-    slack = grafana_contact_point.slack.uid
-    email = length(grafana_contact_point.email) > 0 ? grafana_contact_point.email[0].uid : null
+    slack = grafana_contact_point.slack.id
+    email = length(grafana_contact_point.email) > 0 ? grafana_contact_point.email[0].id : null
   }
 }
 

@@ -20,6 +20,7 @@ resource "null_resource" "render_service" {
     start_command   = var.start_command
     environment     = var.environment
     instance_type   = var.instance_type
+    api_key         = var.render_api_key  # Include API key in triggers for destroy
   }
 
   # Create Render service via API
@@ -67,7 +68,7 @@ resource "null_resource" "render_service" {
       if [ -f render_service_id.txt ]; then
         SERVICE_ID=$(cat render_service_id.txt)
         curl -X DELETE "https://api.render.com/v1/services/$SERVICE_ID" \
-          -H "Authorization: Bearer ${var.render_api_key}"
+          -H "Authorization: Bearer ${self.triggers.api_key}"
         rm -f render_service_id.txt render_service_response.json
       fi
     EOT
@@ -82,6 +83,7 @@ resource "null_resource" "render_database" {
     database_name = var.database_name
     database_plan = var.database_plan
     region        = var.region
+    api_key       = var.render_api_key  # Include API key in triggers for destroy
   }
 
   provisioner "local-exec" {
@@ -112,7 +114,7 @@ resource "null_resource" "render_database" {
       if [ -f render_database_id.txt ]; then
         DB_ID=$(cat render_database_id.txt)
         curl -X DELETE "https://api.render.com/v1/postgres/$DB_ID" \
-          -H "Authorization: Bearer ${var.render_api_key}"
+          -H "Authorization: Bearer ${self.triggers.api_key}"
         rm -f render_database_id.txt render_database_response.json
       fi
     EOT

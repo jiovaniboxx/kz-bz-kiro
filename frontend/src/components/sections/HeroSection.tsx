@@ -119,7 +119,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                 <span className="block text-primary-600">もっと身近に</span>
                 <span className="block">もっと楽しく</span>
               </h1>
-              
+
               <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
                 ネイティブ講師とのカジュアルな会話で、
                 <br className="hidden sm:block" />
@@ -130,8 +130,8 @@ export function HeroSection({ className }: HeroSectionProps) {
 
               {/* CTA ボタン */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="text-lg px-8 py-4"
                   asChild
                 >
@@ -139,10 +139,10 @@ export function HeroSection({ className }: HeroSectionProps) {
                     無料体験レッスンを予約
                   </Link>
                 </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="lg" 
+
+                <Button
+                  variant="outline"
+                  size="lg"
                   className="text-lg px-8 py-4"
                   asChild
                 >
@@ -188,12 +188,12 @@ export function HeroSection({ className }: HeroSectionProps) {
                   className="object-cover"
                   priority
                 />
-                
+
                 {/* 再生ボタンオーバーレイ（将来のYouTube動画用） */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer group">
                   <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <svg className="w-6 h-6 text-primary-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z"/>
+                      <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
                 </div>
@@ -224,8 +224,8 @@ export function HeroSection({ className }: HeroSectionProps) {
             key={index}
             className={cn(
               'w-2 h-2 rounded-full transition-all duration-300',
-              index === currentImageIndex 
-                ? 'bg-primary-600 w-8' 
+              index === currentImageIndex
+                ? 'bg-primary-600 w-8'
                 : 'bg-white/60 hover:bg-white/80'
             )}
             onClick={() => setCurrentImageIndex(index)}

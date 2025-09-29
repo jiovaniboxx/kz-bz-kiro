@@ -9,10 +9,10 @@ terraform {
       source  = "newrelic/newrelic"
       version = "~> 3.25"
     }
-    grafana = {
-      source  = "grafana/grafana"
-      version = "~> 2.9"
-    }
+    # grafana = {
+    #   source  = "grafana/grafana"
+    #   version = "~> 2.9"
+    # }
     vercel = {
       source  = "vercel/vercel"
       version = "~> 0.15"
@@ -20,13 +20,14 @@ terraform {
   }
   
   # Terraform Cloud backend (無料プラン)
-  backend "remote" {
-    organization = "english-cafe"
-    
-    workspaces {
-      name = "monitoring-prod"
-    }
-  }
+  # 初回テスト時はコメントアウト、本格運用時は有効化
+  # backend "remote" {
+  #   organization = "english-cafe"
+  #   
+  #   workspaces {
+  #     name = "monitoring-prod"
+  #   }
+  # }
 }
 
 # Provider Configuration
@@ -36,10 +37,11 @@ provider "newrelic" {
   region     = "US"
 }
 
-provider "grafana" {
-  url  = var.grafana_url
-  auth = var.grafana_auth_token
-}
+# Grafana provider - Temporarily disabled due to API key permissions
+# provider "grafana" {
+#   url  = var.grafana_url
+#   auth = var.grafana_auth_token
+# }
 
 provider "vercel" {
   api_token = var.vercel_api_token
@@ -99,8 +101,8 @@ resource "vercel_project" "english_cafe_frontend" {
       target = ["production"]
     },
     {
-      key    = "NEXT_PUBLIC_NEW_RELIC_APP_ID"
-      value  = module.newrelic.application_id
+      key    = "NEXT_PUBLIC_NEW_RELIC_APP_NAME"
+      value  = module.newrelic.application_name
       target = ["production"]
     },
     {
@@ -158,34 +160,35 @@ module "newrelic" {
   enable_business_alerts = true
 }
 
-# Grafana Module
-module "grafana" {
-  source = "../../modules/grafana"
-  
-  application_name = var.application_name
-  environment     = local.environment
-  
-  prometheus_url = var.prometheus_url
-  prometheus_auth = {
-    enabled  = true
-    username = var.prometheus_username
-    password = var.prometheus_password
-  }
-  
-  newrelic_integration = {
-    enabled    = true
-    account_id = var.newrelic_account_id
-    api_key    = var.newrelic_api_key
-  }
-  
-  alert_thresholds      = local.alert_thresholds
-  notification_channels = local.notification_channels
-  runbook_url          = var.runbook_url
-  
-  enable_business_dashboards = true
-  
-  common_tags = local.common_tags
-}
+# Grafana Module - Temporarily disabled due to API key permissions
+# module "grafana" {
+#   source = "../../modules/grafana"
+#   
+#   application_name = var.application_name
+#   environment     = local.environment
+#   grafana_url     = var.grafana_url
+#   
+#   prometheus_url = var.prometheus_url
+#   prometheus_auth = {
+#     enabled  = true
+#     username = var.prometheus_username
+#     password = var.prometheus_password
+#   }
+#   
+#   newrelic_integration = {
+#     enabled    = true
+#     account_id = var.newrelic_account_id
+#     api_key    = var.newrelic_api_key
+#   }
+#   
+#   alert_thresholds      = local.alert_thresholds
+#   notification_channels = local.notification_channels
+#   runbook_url          = var.runbook_url
+#   
+#   enable_business_dashboards = true
+#   
+#   common_tags = local.common_tags
+# }
 
 # Render Service Monitoring (via New Relic)
 # Renderサービスは直接Terraformで管理しないが、監視設定を含める
@@ -207,32 +210,33 @@ locals {
 }
 
 # Synthetic Monitoring for Render Backend
-resource "newrelic_synthetics_monitor" "render_backend_health" {
-  count = length(local.render_health_checks)
-  
-  name   = local.render_health_checks[count.index].name
-  type   = "SIMPLE"
-  period = "EVERY_5_MINUTES"
-  status = "ENABLED"
-  
-  uri                       = local.render_health_checks[count.index].url
-  validation_string         = ""
-  verify_ssl                = true
-  bypass_head_request       = false
-  treat_redirect_as_failure = false
-  
-  locations_public = ["AWS_AP_NORTHEAST_1", "AWS_US_EAST_1"]
-  
-  tag {
-    key    = "Environment"
-    values = [local.environment]
-  }
-  
-  tag {
-    key    = "Service"
-    values = ["render-backend"]
-  }
-}
+# Note: Disabled due to API key issues, can be enabled once proper credentials are configured
+# resource "newrelic_synthetics_monitor" "render_backend_health" {
+#   count = length(local.render_health_checks)
+#   
+#   name   = local.render_health_checks[count.index].name
+#   type   = "SIMPLE"
+#   period = "EVERY_5_MINUTES"
+#   status = "ENABLED"
+#   
+#   uri                       = local.render_health_checks[count.index].url
+#   validation_string         = ""
+#   verify_ssl                = true
+#   bypass_head_request       = false
+#   treat_redirect_as_failure = false
+#   
+#   locations_public = ["AWS_AP_NORTHEAST_1", "AWS_US_EAST_1"]
+#   
+#   tag {
+#     key    = "Environment"
+#     values = [local.environment]
+#   }
+#   
+#   tag {
+#     key    = "Service"
+#     values = ["render-backend"]
+#   }
+# }
 
 # Vercel Analytics Integration
 # Vercel Analyticsは自動で有効化されるため、追加設定は不要
@@ -246,17 +250,14 @@ module "render" {
   github_repo    = "https://github.com/${var.github_repository}"
   branch         = "main"
   
-  build_command = "cd backend && pip install -r requirements.txt"
-  start_command = "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+  build_command = "cd backend && pip install -e ."
+  start_command = "cd backend && python -m app.main"
   
   environment   = "free"  # free, starter, standard, pro
   instance_type = "free"
   region        = "oregon"
   
   environment_variables = {
-    # Database
-    DATABASE_URL = module.render.database_connection_string
-    
     # New Relic
     NEW_RELIC_LICENSE_KEY = var.newrelic_license_key
     NEW_RELIC_APP_NAME    = var.application_name

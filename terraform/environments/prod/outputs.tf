@@ -1,14 +1,9 @@
 # Production Environment Outputs
 
 # New Relic Outputs
-output "newrelic_application_id" {
-  description = "New Relic application ID"
-  value       = module.newrelic.application_id
-}
-
-output "newrelic_application_guid" {
-  description = "New Relic application GUID"
-  value       = module.newrelic.application_guid
+output "newrelic_application_name" {
+  description = "New Relic application name"
+  value       = module.newrelic.application_name
 }
 
 output "newrelic_alert_policies" {
@@ -16,16 +11,16 @@ output "newrelic_alert_policies" {
   value       = module.newrelic.alert_policy_ids
 }
 
-# Grafana Outputs
-output "grafana_dashboard_urls" {
-  description = "Grafana dashboard URLs"
-  value       = module.grafana.dashboard_urls
-}
+# Grafana Outputs - Temporarily disabled
+# output "grafana_dashboard_urls" {
+#   description = "Grafana dashboard URLs"
+#   value       = module.grafana.dashboard_urls
+# }
 
-output "grafana_folder_ids" {
-  description = "Grafana folder IDs"
-  value       = module.grafana.folder_ids
-}
+# output "grafana_folder_ids" {
+#   description = "Grafana folder IDs"
+#   value       = module.grafana.folder_ids
+# }
 
 # Vercel Outputs
 output "vercel_project_id" {
@@ -59,14 +54,15 @@ output "render_database_id" {
   value       = module.render.database_id
 }
 
-output "render_health_check_url" {
-  description = "Render health check URL"
-  value       = module.render.health_check_url
+output "render_deployment_info" {
+  description = "Render deployment information"
+  value       = module.render.deployment_info
 }
 
 # Monitoring URLs
 output "monitoring_urls" {
   description = "All monitoring service URLs"
+  sensitive   = true
   value = {
     newrelic_app     = "https://one.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJhcG0uYXBwbGljYXRpb25zLWxpc3RpbmciLCJlbnRpdHlHdWlkIjoiJHtbXX0ifQ==&platform[accountId]=${var.newrelic_account_id}"
     grafana_org      = var.grafana_url
@@ -94,11 +90,12 @@ output "cost_summary" {
 # Configuration Summary
 output "configuration_summary" {
   description = "Summary of monitoring configuration"
+  sensitive   = true
   value = {
     environment           = local.environment
     application_name     = var.application_name
     alert_policies_count = length(module.newrelic.alert_policy_ids)
-    dashboards_count     = length(module.grafana.dashboard_urls)
+    dashboards_count     = 0  # Grafana temporarily disabled
     notification_channels = {
       slack_enabled = length(var.slack_webhook_url) > 0
       email_enabled = length(var.admin_email) > 0
