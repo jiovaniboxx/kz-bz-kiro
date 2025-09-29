@@ -26,7 +26,7 @@
     "axios": "^1.12.2",
     "clsx": "^2.1.1",
     "dompurify": "^3.0.7",
-    "framer-motion": "^10.16.16",
+    "framer-motion": "^12.23.22",
     "next": "^14.2.32",
     "postcss": "^8.4.32",
     "react": "^18.2.0",
