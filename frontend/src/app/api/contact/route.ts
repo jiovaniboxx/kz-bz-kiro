@@ -15,7 +15,8 @@ export async function POST(request: NextRequest) {
     };
     
     // バックエンドAPIに転送
-    const backendUrl = process.env.BACKEND_URL || 'http://backend:8000';
+    // const backendUrl = process.env.BACKEND_URL || 'http://backend:8000';
+    const backendUrl = 'https://kz-bz-kiro.onrender.com';
     const response = await fetch(`${backendUrl}/api/v1/contacts/`, {
       method: 'POST',
       headers: {
